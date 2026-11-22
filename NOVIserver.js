@@ -113,7 +113,10 @@ function ministryPermission(state, userId, ministry, permission, isAdmin) {
 function jsonEqual(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
 function changedKeys(oldState, newState) {
   const keys = new Set([...Object.keys(oldState || {}), ...Object.keys(newState || {})]);
-  return [...keys].filter(k => !jsonEqual(oldState?.[k], newState?.[k]));
+  return [...keys].filter(k => {
+    if (k === 'roles') return !jsonEqual(oldState?.roles || [], newState?.roles || []);
+    return !jsonEqual(oldState?.[k], newState?.[k]);
+  });
 }
 function validateNonAdminChanges(req, nextState) {
   const old = req.state;
