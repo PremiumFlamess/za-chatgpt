@@ -416,6 +416,7 @@ function isRoyal(){return bbIsAdmin();}
 function render(){
  if(!me){publicHome();return;}
  if(me.role==='Soldier'&&!me.isMainAdmin){renderSoldier();return;}
+ if(activeMinistry&&!bbIsAdmin()&&!bbMembership(activeMinistry)&&!(activeMinistry==='finance'&&bbMembership('government')?.position==='Prime Minister'))activeMinistry=null;
  if(!activeMinistry){bbMinistryChooser();return;}
  if(activeMinistry==='defence'){bbOriginalRender();return;}
  bbRenderMinistry(activeMinistry);
@@ -428,6 +429,8 @@ function bbMinistryChooser(){
 }
 function bbEnterMinistry(id){if(!bbIsAdmin()&&!bbMembership(id)&&!(id==='finance'&&bbMembership('government')?.position==='Prime Minister'))return toast('You do not have access to this ministry.');activeMinistry=id;if(id==='defence'){page='dashboard';render();}else render();}
 function bbBackToMinistries(){activeMinistry=null;render();}
+const bbOriginalLogout=logout;
+async function logout(){activeMinistry=null;await bbOriginalLogout();}
 function bbManageMemberships(){
  if(!bbIsAdmin())return;
  const users=db.users.filter(u=>u.id!==me.id);
