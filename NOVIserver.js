@@ -4,42 +4,245 @@ import jwt from 'jsonwebtoken';
 import { createClient } from '@supabase/supabase-js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
+import { scrypt as scryptCallback, timingSafeEqual, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 import bcrypt from 'bcryptjs';
-const scrypt=promisify(scryptCallback);
-const __dirname=path.dirname(fileURLToPath(import.meta.url));
-const app=express();const PORT=process.env.PORT||10000;
-const {SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY,SESSION_SECRET,MAIN_ADMIN_USER_ID}=process.env;
-if(!SUPABASE_URL||!SUPABASE_SERVICE_ROLE_KEY||!SESSION_SECRET||!MAIN_ADMIN_USER_ID){console.error('Missing required environment variables (including MAIN_ADMIN_USER_ID).');process.exit(1)}
-const supabase=createClient(SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
-app.disable('x-powered-by');app.use(express.json({limit:'2mb'}));app.use(cookieParser());
-const MINISTRIES=[{id:'defence',name:'Ministry of Defence'},{id:'foreign',name:'Ministry of Foreign Affairs'},{id:'economy',name:'Ministry of Economy'},{id:'finance',name:'Ministry of Finance'},{id:'propaganda',name:'Ministry of Propaganda'},{id:'government',name:'Government of Serbia'}];
-async function readState(){const {data,error}=await supabase.from('app_state').select('data').eq('id',1).single();if(error)throw error;return data.data}
-async function writeState(state){const {error}=await supabase.from('app_state').upsert({id:1,data:state,updated_at:new Date().toISOString()},{onConflict:'id'});if(error)throw error}
-function safeUser(u){const {password,passwordHash,...safe}=u;return {...safe,isMainAdmin:u.id===MAIN_ADMIN_USER_ID}}
-function safeState(s,user){const admin=user?.id===MAIN_ADMIN_USER_ID;const assignments=user?.ministries||[];const ownSoldier=(s.soldiers||[]).find(x=>x.id===user?.soldierId);const isSoldier=user?.role==='Soldier';const visiblePosts=(s.ministryPosts||[]).filter(p=>p.visibility==='public'||admin||assignments.some(a=>a.ministryId===p.ministryId));const canFinance=admin||assignments.some(a=>(a.ministryId==='finance'&&(a.permissions||[]).some(x=>['finance.view','finance.pay'].includes(x)))||(a.ministryId==='government'&&['prime minister','premijer'].includes(String(a.title||'').toLowerCase())));if(isSoldier){const ownId=ownSoldier?.id;return {...s,users:[safeUser(user)],soldiers:ownSoldier?[ownSoldier]:[],trainings:(s.trainings||[]).filter(t=>(t.attendees||[]).some(a=>a.soldierId===ownId)),deployments:(s.deployments||[]).filter(t=>(t.attendees||[]).some(a=>a.soldierId===ownId)),audit:[],ministryPosts:visiblePosts,salaries:[],ministries:[]}}return {...s,users:(s.users||[]).map(safeUser),ministryPosts:visiblePosts,salaries:canFinance?(s.salaries||[]):[]}}
-async function hashPassword(p){return bcrypt.hash(p,12)}
-async function verifyPassword(password,user){if(typeof user.passwordHash==='string'){const h=user.passwordHash;if(/^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(h))return bcrypt.compare(password,h);if(h.startsWith('scrypt$')){const a=h.split('$');if(a.length!==3||!a[1]||! /^[0-9a-fA-F]{128}$/.test(a[2]))return false;const actual=Buffer.from(await scrypt(password,a[1],64));const expected=Buffer.from(a[2],'hex');return actual.length===expected.length&&expected.length===64&&timingSafeEqual(actual,expected)}}return typeof user.password==='string'&&user.password===password}
-async function requireSession(req,res,next){try{const token=req.cookies.mo_session;if(!token)throw Error('missing');const payload=jwt.verify(token,SESSION_SECRET);const state=await readState();const user=state.users.find(u=>u.id===payload.id);if(!user)throw Error('user missing');req.user=user;req.state=state;next()}catch(e){res.status(401).json({error:'Sesija je istekla. Prijavite se ponovo.'})}}
-function isAdmin(req){return req.user?.id===MAIN_ADMIN_USER_ID}
-function has(req,p){return isAdmin(req)||(req.user?.role==='Royal Family'&&p!=='users.manage')||(req.user?.permissions||[]).includes('*')||(req.user?.permissions||[]).includes(p)}
-function ministryAssignment(req,id,permission){return isAdmin(req)||(req.user?.ministries||[]).some(a=>a.ministryId===id&&(a.permissions||[]).includes(permission))}
-function canFinancePay(req){return ministryAssignment(req,'finance','finance.pay')||(req.user?.ministries||[]).some(a=>a.ministryId==='government'&&['prime minister','premijer'].includes(String(a.title||'').toLowerCase()))}
-function ensurePortal(s){if(!Array.isArray(s.ministries))s.ministries=MINISTRIES.map(m=>({...m,ministerId:null}));if(!Array.isArray(s.ministryPosts))s.ministryPosts=[];if(!Array.isArray(s.salaries))s.salaries=[];}
-app.post('/api/login',async(req,res)=>{try{const username=String(req.body?.username||'').trim().toLowerCase(),password=String(req.body?.password||'');if(!username||!password)return res.status(400).json({error:'Unesite korisničko ime i lozinku.'});const state=await readState();if(!state||!Array.isArray(state.users))throw Error('Invalid users');const user=state.users.find(u=>String(u.username||'').trim().toLowerCase()===username);if(!user||!(await verifyPassword(password,user)))return res.status(401).json({error:'Pogrešno korisničko ime ili lozinka.'});if(!user.passwordHash){user.passwordHash=await hashPassword(password);delete user.password;await writeState(state)}const publicUser=safeUser(user);const token=jwt.sign({id:user.id},SESSION_SECRET,{expiresIn:'12h'});res.cookie('mo_session',token,{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',maxAge:43200000,path:'/'});res.json({user:publicUser})}catch(e){console.error('[LOGIN_ERROR]',e);res.status(500).json({error:'Greška pri prijavi na server.'})}});
-app.post('/api/logout',(_req,res)=>{res.clearCookie('mo_session',{httpOnly:true,sameSite:'lax',path:'/'});res.json({ok:true})});
-app.get('/api/public/feed',async(_req,res)=>{try{const s=await readState();ensurePortal(s);const posts=s.ministryPosts.filter(p=>p.visibility==='public').sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,30).map(p=>({...p,ministryName:MINISTRIES.find(m=>m.id===p.ministryId)?.name||'Government'}));res.set('Cache-Control','no-store');res.json({posts})}catch(e){console.error(e);res.status(500).json({error:'Feed unavailable'})}});
-app.get('/api/state',requireSession,(req,res)=>{res.set('Cache-Control','no-store');res.json(safeState(req.state,req.user))});
-// Field-scoped state writes: users and password data cannot be changed through this endpoint.
-app.put('/api/state',requireSession,async(req,res)=>{try{const incoming=req.body;if(!incoming||!Array.isArray(incoming.users)||!Array.isArray(incoming.soldiers))return res.status(400).json({error:'Neispravan format podataka.'});const current=await readState();const merged={...current};const allowed=[['soldiers','soldiers.manage'],['trainings','trainings.manage'],['deployments','deployments.manage'],['brigades','brigades.manage'],['ranks','ranks.manage'],['promotionPoints','ranks.manage']];if(isAdmin(req)){for(const k of Object.keys(incoming))if(k!=='users')merged[k]=incoming[k]}else{for(const [key,perm] of allowed)if(has(req,perm)&&incoming[key]!==undefined)merged[key]=incoming[key];if(incoming.ministryPosts!==undefined){const assigned=(req.user.ministries||[]).map(x=>x.ministryId);const old=Array.isArray(current.ministryPosts)?current.ministryPosts:[];const next=Array.isArray(incoming.ministryPosts)?incoming.ministryPosts:old;merged.ministryPosts=[...old.filter(p=>!assigned.includes(p.ministryId)),...next.filter(p=>assigned.includes(p.ministryId))]}}merged.users=current.users;merged.audit=Array.isArray(current.audit)?current.audit:[];await writeState(merged);res.json({ok:true})}catch(e){console.error('[STATE_SAVE]',e);res.status(500).json({error:'Čuvanje u Supabase bazi nije uspelo.'})}});
-app.post('/api/admin/accounts',requireSession,async(req,res)=>{try{if(!isAdmin(req))return res.status(403).json({error:'Samo glavni administrator može kreirati naloge.'});const {username,display,role,permissions,ministries,password}=req.body||{};const name=String(username||'').trim();if(!name)return res.status(400).json({error:'Username is required.'});const state=await readState();if(state.users.some(u=>u.username.toLowerCase()===name.toLowerCase()))return res.status(409).json({error:'Korisničko ime već postoji.'});const user={id:randomBytes(16).toString('hex'),username:name,display:String(display||name),role:String(role||'Staff'),permissions:Array.isArray(permissions)?permissions:[],ministries:Array.isArray(ministries)?ministries:[],passwordConfigured:false};if(password){if(String(password).length<10)return res.status(400).json({error:'Lozinka mora imati najmanje 10 karaktera.'});user.passwordHash=await hashPassword(String(password));user.passwordConfigured=true}state.users.push(user);await writeState(state);res.status(201).json({user:safeUser(user)})}catch(e){console.error(e);res.status(500).json({error:'Kreiranje naloga nije uspelo.'})}});
-app.patch('/api/admin/accounts/:id',requireSession,async(req,res)=>{try{if(!isAdmin(req))return res.status(403).json({error:'Samo glavni administrator može menjati naloge.'});const s=await readState(),u=s.users.find(x=>x.id===req.params.id);if(!u)return res.status(404).json({error:'Nalog nije pronađen.'});if(u.id==='u1')return res.status(400).json({error:'Glavni admin nalog je zaštićen.'});for(const k of ['display','role','permissions','ministries'])if(req.body?.[k]!==undefined)u[k]=req.body[k];await writeState(s);res.json({user:safeUser(u)})}catch(e){console.error(e);res.status(500).json({error:'Izmena naloga nije uspela.'})}});
-app.post('/api/admin/accounts/:id/password',requireSession,async(req,res)=>{try{if(!isAdmin(req))return res.status(403).json({error:'Samo glavni administrator može menjati lozinke.'});const password=String(req.body?.password||'');if(password.length<10)return res.status(400).json({error:'Lozinka mora imati najmanje 10 karaktera.'});const s=await readState(),u=s.users.find(x=>x.id===req.params.id);if(!u)return res.status(404).json({error:'Nalog nije pronađen.'});u.passwordHash=await hashPassword(password);delete u.password;u.passwordConfigured=true;await writeState(s);res.json({ok:true})}catch(e){console.error(e);res.status(500).json({error:'Promena lozinke nije uspela.'})}});
-app.delete('/api/admin/accounts/:id',requireSession,async(req,res)=>{try{if(!isAdmin(req))return res.status(403).json({error:'Samo glavni administrator može uklanjati naloge.'});if(req.params.id==='u1')return res.status(400).json({error:'Glavni admin nalog ne može biti uklonjen.'});const s=await readState();s.users=s.users.filter(u=>u.id!==req.params.id);for(const soldier of s.soldiers||[])if(soldier.userId===req.params.id)soldier.userId=null;await writeState(s);res.json({ok:true})}catch(e){console.error(e);res.status(500).json({error:'Uklanjanje naloga nije uspelo.'})}});
-app.post('/api/soldier-accounts',requireSession,async(req,res)=>{try{if(!has(req,'soldiers.manage'))return res.status(403).json({error:'Nemate dozvolu za kreiranje vojničkih naloga.'});const {username,display,password,soldierId}=req.body||{};const name=String(username||'').trim(),pass=String(password||'');if(!name||pass.length<10||!soldierId)return res.status(400).json({error:'Unesite username, lozinku od najmanje 10 karaktera i vojnički ID.'});const s=await readState();if(s.users.some(u=>u.username.toLowerCase()===name.toLowerCase()))return res.status(409).json({error:'Korisničko ime već postoji.'});const user={id:randomBytes(16).toString('hex'),username:name,display:String(display||name),role:'Soldier',permissions:[],soldierId,passwordHash:await hashPassword(pass),passwordConfigured:true};s.users.push(user);await writeState(s);res.status(201).json({user:safeUser(user)})}catch(e){console.error(e);res.status(500).json({error:'Kreiranje vojničkog naloga nije uspelo.'})}});
-app.patch('/api/soldier-accounts/:id',requireSession,async(req,res)=>{try{if(!has(req,'soldiers.manage'))return res.status(403).json({error:'Nemate dozvolu za izmenu vojničkog naloga.'});const s=await readState(),u=s.users.find(x=>x.id===req.params.id&&x.role==='Soldier');if(!u)return res.status(404).json({error:'Vojnički nalog nije pronađen.'});const name=String(req.body?.username||u.username).trim();if(s.users.some(x=>x.id!==u.id&&x.username.toLowerCase()===name.toLowerCase()))return res.status(409).json({error:'Korisničko ime već postoji.'});u.username=name;if(req.body?.display!==undefined)u.display=String(req.body.display);if(req.body?.soldierId!==undefined)u.soldierId=req.body.soldierId;await writeState(s);res.json({user:safeUser(u)})}catch(e){console.error(e);res.status(500).json({error:'Izmena vojničkog naloga nije uspela.'})}});
-app.post('/api/soldier-accounts/:id/password',requireSession,async(req,res)=>{try{if(!has(req,'soldiers.manage'))return res.status(403).json({error:'Nemate dozvolu za promenu vojničke lozinke.'});const pass=String(req.body?.password||'');if(pass.length<10)return res.status(400).json({error:'Lozinka mora imati najmanje 10 karaktera.'});const s=await readState(),u=s.users.find(x=>x.id===req.params.id&&x.role==='Soldier');if(!u)return res.status(404).json({error:'Vojnički nalog nije pronađen.'});u.passwordHash=await hashPassword(pass);delete u.password;await writeState(s);res.json({ok:true})}catch(e){console.error(e);res.status(500).json({error:'Promena lozinke nije uspela.'})}});
-app.post('/api/ministry/posts',requireSession,async(req,res)=>{try{const {ministryId,title,body,url,visibility}=req.body||{};const allowed= ministryAssignment(req,ministryId,'posts.manage')||(ministryId==='government'&&ministryAssignment(req,'government','government.announce'));if(!allowed)return res.status(403).json({error:'Nemate dozvolu za objavljivanje u ovom ministarstvu.'});if(!MINISTRIES.some(m=>m.id===ministryId)||!String(title||'').trim())return res.status(400).json({error:'Neispravan post.'});if(url&&!/^https:\/\//i.test(url))return res.status(400).json({error:'Link mora koristiti HTTPS.'});const s=await readState();ensurePortal(s);const post={id:randomBytes(12).toString('hex'),ministryId,title:String(title).trim().slice(0,120),body:String(body||'').slice(0,5000),url:String(url||''),visibility:visibility==='internal'?'internal':'public',createdAt:new Date().toISOString(),author:req.user.username};s.ministryPosts.unshift(post);await writeState(s);res.status(201).json({post})}catch(e){console.error(e);res.status(500).json({error:'Objava nije sačuvana.'})}});
-app.post('/api/ministry/salaries',requireSession,async(req,res)=>{try{if(!canFinancePay(req))return res.status(403).json({error:'Nemate dozvolu za unos isplata.'});const {soldierId,amount,paidAt}=req.body||{};const value=Number(amount);const s=await readState();if(!(s.soldiers||[]).some(x=>x.id===soldierId)||!(value>0)||!/^\d{4}-\d{2}-\d{2}$/.test(String(paidAt||'')))return res.status(400).json({error:'Neispravni podaci o isplati.'});ensurePortal(s);const payment={id:randomBytes(12).toString('hex'),soldierId,amount:value,paidAt:new Date(paidAt+'T12:00:00.000Z').toISOString(),paidBy:req.user.username};s.salaries.push(payment);await writeState(s);res.status(201).json({payment})}catch(e){console.error(e);res.status(500).json({error:'Isplata nije sačuvana.'})}});
-app.use(express.static(__dirname));app.listen(PORT,()=>console.log(`App listening on ${PORT}`));
+
+const scrypt = promisify(scryptCallback);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const app = express();
+const PORT = process.env.PORT || 10000;
+const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SESSION_SECRET, MAIN_ADMIN_USER_ID } = process.env;
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SESSION_SECRET || !MAIN_ADMIN_USER_ID) {
+  console.error('Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SESSION_SECRET, MAIN_ADMIN_USER_ID.');
+  process.exit(1);
+}
+if (SESSION_SECRET.length < 32) {
+  console.error('SESSION_SECRET must contain at least 32 characters.');
+  process.exit(1);
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
+app.disable('x-powered-by');
+app.use(express.json({ limit: '2mb' }));
+app.use(cookieParser());
+app.use((req, res, next) => {
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
+async function readState() {
+  const { data, error } = await supabase.from('app_state').select('data').eq('id', 1).single();
+  if (error) throw error;
+  if (!data?.data || !Array.isArray(data.data.users) || !Array.isArray(data.data.soldiers)) {
+    throw new Error('Invalid app_state data structure.');
+  }
+  return data.data;
+}
+async function writeState(data) {
+  const { error } = await supabase.from('app_state').upsert({ id: 1, data, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+  if (error) throw error;
+}
+function publicUser(user) {
+  return {
+    id: user.id,
+    username: user.username,
+    display: user.display || user.username,
+    role: user.role || 'Staff',
+    permissions: Array.isArray(user.permissions) ? user.permissions : [],
+    soldierId: user.soldierId || null,
+    isMainAdmin: user.id === MAIN_ADMIN_USER_ID
+  };
+}
+async function verifyPassword(password, user) {
+  if (typeof user.passwordHash === 'string') {
+    const hash = user.passwordHash;
+    if (/^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(hash)) return bcrypt.compare(password, hash);
+    if (hash.startsWith('scrypt$')) {
+      const parts = hash.split('$');
+      if (parts.length !== 3 || !/^[0-9a-fA-F]{128}$/.test(parts[2])) return false;
+      const actual = Buffer.from(await scrypt(password, parts[1], 64));
+      const expected = Buffer.from(parts[2], 'hex');
+      return actual.length === expected.length && expected.length === 64 && timingSafeEqual(actual, expected);
+    }
+  }
+  return typeof user.password === 'string' && user.password === password;
+}
+async function hashPassword(password) {
+  return bcrypt.hash(password, 12);
+}
+async function auth(req, res, next) {
+  try {
+    const token = req.cookies.bb_session || req.cookies.mo_session;
+    if (!token) return res.status(401).json({ error: 'Please sign in.' });
+    const payload = jwt.verify(token, SESSION_SECRET);
+    const state = await readState();
+    const user = state.users.find(u => u.id === payload.userId);
+    if (!user) return res.status(401).json({ error: 'Account no longer exists. Please sign in again.' });
+    req.state = state;
+    req.user = publicUser(user);
+    req.rawUser = user;
+    req.isMainAdmin = user.id === MAIN_ADMIN_USER_ID;
+    next();
+  } catch (err) {
+    if (err?.name !== 'JsonWebTokenError' && err?.name !== 'TokenExpiredError') console.error('[AUTH_ERROR]', err);
+    res.status(401).json({ error: 'Session expired. Please sign in again.' });
+  }
+}
+function hasGlobalPermission(req, permission) {
+  return req.isMainAdmin || req.user.permissions.includes('*') || req.user.permissions.includes(permission);
+}
+function ministryPermission(state, userId, ministry, permission, isAdmin) {
+  if (isAdmin) return true;
+  const membership = (state.ministryMembers || []).find(x => x.userId === userId && x.ministry === ministry);
+  return !!membership && (membership.permissions || []).some(p => p === '*' || p === permission);
+}
+function jsonEqual(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
+function changedKeys(oldState, newState) {
+  const keys = new Set([...Object.keys(oldState || {}), ...Object.keys(newState || {})]);
+  return [...keys].filter(k => !jsonEqual(oldState?.[k], newState?.[k]));
+}
+function validateNonAdminChanges(req, nextState) {
+  const old = req.state;
+  const changed = changedKeys(old, nextState);
+  for (const key of changed) {
+    if (key === 'audit') continue;
+    if (key === 'soldiers' && hasGlobalPermission(req, 'soldiers.manage')) continue;
+    if (key === 'trainings' && hasGlobalPermission(req, 'trainings.manage')) continue;
+    if (key === 'deployments' && hasGlobalPermission(req, 'deployments.manage')) continue;
+    if (key === 'brigades' && hasGlobalPermission(req, 'brigades.manage')) continue;
+    if ((key === 'ranks' || key === 'promotionPoints') && hasGlobalPermission(req, 'ranks.manage')) continue;
+    if (key === 'users') {
+      const stripCredentials = u => { const { password, passwordHash, ...safe } = u; return safe; };
+      const oldUsers = new Map(old.users.map(u => [u.id, stripCredentials(u)]));
+      const newUsers = new Map(nextState.users.map(u => [u.id, stripCredentials(u)]));
+      const removedOrChanged = [...oldUsers].some(([id, user]) => !newUsers.has(id) || !jsonEqual(user, newUsers.get(id)));
+      const added = [...newUsers].filter(([id]) => !oldUsers.has(id)).map(([id]) => nextState.users.find(u => u.id === id));
+      if (!removedOrChanged && added.length && hasGlobalPermission(req, 'soldiers.manage') && added.every(u => u.role === 'Soldier' && u.soldierId && u.id && u.username)) continue;
+      return 'Only the main administrator can edit existing accounts. Staff may create Soldier accounts when authorised.';
+    }
+    if (key === 'announcements') {
+      const oldRows = new Map((old.announcements || []).map(a => [a.id, a]));
+      const newRows = new Map((nextState.announcements || []).map(a => [a.id, a]));
+      if ([...oldRows].some(([id, a]) => !newRows.has(id) || !jsonEqual(a, newRows.get(id)))) return 'Only the main administrator can delete or edit announcements.';
+      const additions = [...newRows].filter(([id]) => !oldRows.has(id)).map(([, a]) => a);
+      if (additions.every(a => ministryPermission(old, req.user.id, a.ministry, a.ministry === 'propaganda' ? 'propaganda.manage' : 'announcements.manage', false) || (a.ministry === 'government' && ministryPermission(old, req.user.id, 'government', 'government.internal', false)))) continue;
+      return 'You do not have permission to publish in this ministry.';
+    }
+    if (key === 'salaryRecords') {
+      if (!ministryPermission(old, req.user.id, 'finance', 'finance.manage', false)) return 'You do not have Finance payroll permission.';
+      const oldRows = new Map((old.salaryRecords || []).map(x => [x.id, x]));
+      const newRows = new Map((nextState.salaryRecords || []).map(x => [x.id, x]));
+      if ([...oldRows].some(([id, x]) => !newRows.has(id) || !jsonEqual(x, newRows.get(id)))) return 'Salary records cannot be edited or deleted by this account.';
+      continue;
+    }
+    return `You are not authorised to change ${key}.`;
+  }
+  return null;
+}
+
+app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'balkan-borders-rp' }));
+app.get('/api/public', async (_req, res) => {
+  try {
+    const state = await readState();
+    const announcements = (state.announcements || [])
+      .filter(a => a.visibility !== 'internal')
+      .map(a => ({ id: a.id, ministry: a.ministry, title: a.title, body: a.body, description: a.description, url: a.url, kind: a.kind, createdAt: a.createdAt }));
+    res.json({ announcements });
+  } catch (err) {
+    console.error('[PUBLIC_FEED_ERROR]', err);
+    res.status(500).json({ error: 'Public announcements are temporarily unavailable.' });
+  }
+});
+app.post('/api/login', async (req, res) => {
+  try {
+    const username = String(req.body?.username || '').trim().toLowerCase();
+    const password = String(req.body?.password || '');
+    if (!username || !password) return res.status(400).json({ error: 'Enter username and password.' });
+    const state = await readState();
+    const user = state.users.find(u => String(u.username || '').trim().toLowerCase() === username);
+    if (!user || !(await verifyPassword(password, user))) return res.status(401).json({ error: 'Incorrect username or password.' });
+    // Upgrade legacy plaintext credentials on successful login. Existing users keep the same password.
+    if (typeof user.password === 'string' && !user.passwordHash) {
+      user.passwordHash = await hashPassword(password);
+      delete user.password;
+      await writeState(state);
+    }
+    const safe = publicUser(user);
+    const token = jwt.sign({ userId: user.id }, SESSION_SECRET, { expiresIn: '12h', issuer: 'balkan-borders-rp' });
+    res.cookie('bb_session', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 43200000, path: '/' });
+    // Legacy cookie is cleared so old sessions cannot keep using the previous auth path.
+    res.clearCookie('mo_session', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
+    res.json({ user: safe });
+  } catch (err) {
+    console.error('[LOGIN_ERROR]', err);
+    res.status(500).json({ error: 'Unable to sign in right now.' });
+  }
+});
+app.post('/api/logout', (_req, res) => {
+  const opts = { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' };
+  res.clearCookie('bb_session', opts); res.clearCookie('mo_session', opts); res.json({ ok: true });
+});
+app.get('/api/state', auth, (req, res) => {
+  const copy = structuredClone(req.state);
+  copy.users = copy.users.map(u => {
+    if (req.isMainAdmin) return u;
+    const { password, passwordHash, ...safe } = u;
+    return safe;
+  });
+  res.json(copy);
+});
+app.put('/api/state', auth, async (req, res) => {
+  try {
+    const nextState = req.body;
+    if (!nextState || !Array.isArray(nextState.users) || !Array.isArray(nextState.soldiers)) return res.status(400).json({ error: 'Invalid data format.' });
+    if (JSON.stringify(nextState).length > 2_000_000) return res.status(413).json({ error: 'State payload is too large.' });
+    if (!req.isMainAdmin) {
+      const denied = validateNonAdminChanges(req, nextState);
+      if (denied) return res.status(403).json({ error: denied });
+      // Preserve server-side credential fields; a client must never erase or set another account's hashes.
+      const incoming = new Map(nextState.users.map(u => [u.id, u]));
+      const addedUsers = nextState.users.filter(u => !req.state.users.some(oldUser => oldUser.id === u.id));
+      nextState.users = req.state.users.map(oldUser => {
+        const updated = incoming.get(oldUser.id) || oldUser;
+        return { ...updated, password: oldUser.password, passwordHash: oldUser.passwordHash };
+      });
+      for (const added of addedUsers) {
+        if (typeof added.password === 'string' && added.password.length) {
+          added.passwordHash = await hashPassword(added.password);
+          delete added.password;
+        }
+      }
+      nextState.users.push(...addedUsers);
+      nextState.ministryMembers = req.state.ministryMembers || [];
+    }
+    if (req.isMainAdmin) {
+      // Hash any newly supplied or changed password before persisting account data.
+      const oldUsers = new Map(req.state.users.map(u => [u.id, u]));
+      for (const user of nextState.users) {
+        const oldUser = oldUsers.get(user.id);
+        if (typeof user.password === 'string' && user.password.length) {
+          if (!oldUser || user.password !== oldUser.password || user.passwordHash !== oldUser.passwordHash) {
+            user.passwordHash = await hashPassword(user.password);
+          }
+          delete user.password;
+        }
+      }
+    }
+    await writeState(nextState);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[STATE_SAVE_ERROR]', err);
+    res.status(500).json({ error: 'Saving changes failed.' });
+  }
+});
+app.get('/api/me', auth, (req, res) => res.json({ user: req.user }));
+
+app.use(express.static(__dirname, { extensions: ['html'] }));
+app.use((_req, res) => res.sendFile(path.join(__dirname, 'NOVIindex.html')));
+app.listen(PORT, () => console.log(`Balkan Borders RP server listening on ${PORT}`));
