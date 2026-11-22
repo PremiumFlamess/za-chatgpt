@@ -472,6 +472,30 @@ function ensureExtendedData(){
  if(!Array.isArray(db.audit))db.audit=[];
 }
 function bbSetMe(){if(me){me.isMainAdmin=!!me.isMainAdmin;}}
+// Soldier creation keeps existing linked account credentials untouched for non-admin staff.
+function saveSoldier(id){
+ if(!has('soldiers.manage'))return;
+ const roblox=document.getElementById('froblox').value.trim(),discord=document.getElementById('fdiscord').value.trim();
+ if(!roblox||!discord)return toast('Enter both Roblox and Discord usernames.');
+ const old=db.soldiers.find(x=>x.id===id),soldierId=old?.id||crypto.randomUUID();
+ let account=(old?.userId?db.users.find(u=>u.id===old.userId):null)||db.users.find(u=>u.soldierId===soldierId);
+ const requestedUsername=(document.getElementById('fsoldieruser')?.value||'').trim();
+ const requestedPassword=(document.getElementById('fsoldierpass')?.value||'').trim();
+ const s={id:soldierId,roblox,discord,rank:document.getElementById('frank').value,points:Math.max(0,+document.getElementById('fpoints').value||0),brigade:document.getElementById('fbrigade').value,strikes:Math.max(0,+document.getElementById('fstrikes').value||0),notes:document.getElementById('fnotes').value,registered:old?.registered||new Date().toISOString(),userId:account?.id||null};
+ if(old)Object.assign(old,s);else db.soldiers.unshift(s);
+ let credentials=null;
+ if(!account){
+  const username=requestedUsername||makeSoldierUsername(),password=requestedPassword||makeSoldierPassword();
+  if(db.users.some(u=>u.username.toLowerCase()===username.toLowerCase()))return toast('That username already exists.');
+  account={id:crypto.randomUUID(),username,password,display:roblox,role:'Soldier',permissions:[],soldierId:s.id};db.users.push(account);s.userId=account.id;credentials={username,password};
+ }
+ log(old?'EDIT_SOLDIER':'ADD_SOLDIER',roblox+' · '+discord);
+ save();closeModal();drawPage();
+ if(credentials)openModal('Soldier account created',`<p>Account linked to <b>${bbEscape(roblox)}</b>.</p><div class="card"><p>Username<br><b>${bbEscape(credentials.username)}</b></p><p>Password<br><b>${bbEscape(credentials.password)}</b></p></div><p class="hint">Give these credentials to the soldier now. The password is stored as a secure hash.</p>`,`<button class="btn" onclick="bbCopyCredentials('${bbEscape(credentials.username)}','${bbEscape(credentials.password)}')">Copy credentials</button>`,`<button class="btn primary" onclick="closeModal()">Close</button>`);
+ else toast('Soldier record updated. Existing account credentials were not changed.');
+}
+function bbCopyCredentials(username,password){const value='Username: '+username+'\nPassword: '+password;navigator.clipboard?.writeText(value).then(()=>toast('Credentials copied.')).catch(()=>toast('Clipboard access unavailable.'));}
+function removeSoldier(id){if(!bbIsAdmin())return toast('Only the main administrator can remove linked Soldier accounts.');const s=db.soldiers.find(x=>x.id===id);if(!s||!confirm('Remove soldier '+s.roblox+'?'))return;db.soldiers=db.soldiers.filter(x=>x.id!==id);if(s.userId)db.users=db.users.filter(u=>u.id!==s.userId);log('REMOVE_SOLDIER',s.roblox);save();closeModal();drawPage();}
 // Main-administrator-only account administration. Passwords are reset, never displayed in plaintext.
 function usersPage(){
  if(!bbIsAdmin())return '<div class="empty">Only the main administrator can manage accounts.</div>';
