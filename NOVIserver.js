@@ -135,7 +135,9 @@ function validateNonAdminChanges(req, nextState) {
       return 'You do not have permission to publish in this ministry.';
     }
     if (key === 'salaryRecords') {
-      if (!ministryPermission(old, req.user.id, 'finance', 'finance.manage', false)) return 'You do not have Finance payroll permission.';
+      const governmentRole = (old.ministryMembers || []).find(x => x.userId === req.user.id && x.ministry === 'government');
+      const isPrimeMinister = governmentRole && String(governmentRole.position || '').toLowerCase() === 'prime minister';
+      if (!ministryPermission(old, req.user.id, 'finance', 'finance.manage', false) && !isPrimeMinister) return 'You do not have Finance payroll permission.';
       const oldRows = new Map((old.salaryRecords || []).map(x => [x.id, x]));
       const newRows = new Map((nextState.salaryRecords || []).map(x => [x.id, x]));
       if ([...oldRows].some(([id, x]) => !newRows.has(id) || !jsonEqual(x, newRows.get(id)))) return 'Salary records cannot be edited or deleted by this account.';
