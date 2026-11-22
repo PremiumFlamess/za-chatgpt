@@ -457,6 +457,7 @@ function bbMembership(ministry){
  return {...(direct||{}),userId:me?.id,ministry,position:direct?.position||'',permissions:[...new Set([...(direct?.permissions||[]),...roles.flatMap(r=>r.permissions||[])])]};
 }
 function bbCan(ministry,permission){const m=bbMembership(ministry);return bbIsAdmin()||!!(m?.permissions||[]).includes('*')||(m?.permissions||[]).includes(permission)||(permission==='government.internal'&&m?.position==='Prime Minister');}
+function canFinancePay(){return bbIsAdmin()||bbCan('finance','finance.manage');}
 function bbMinistryName(id){const m=BB_MINISTRIES.find(x=>x.id===id);return m?bbT(m.name):id;}
 function bbEscapeUrl(url){try{const u=new URL(url);return ['http:','https:'].includes(u.protocol)?u.href:'#'}catch{return '#'}}
 function bbSetLanguage(v){lang=BB_LANGS.some(x=>x[0]===v)?v:'en';localStorage.setItem('bb-language',lang);publicHome();}
@@ -492,7 +493,15 @@ function bbMinistryChooser(){
  const cards=accessible.map(m=>`<button class="ministry-tile" onclick="bbEnterMinistry('${m.id}')"><span class="mi">${m.icon}</span><b>${m.name}</b><small>${m.desc}</small></button>`).join('');
  document.getElementById('root').innerHTML=`<div class="public-shell"><header class="public-top"><div class="public-brand"><div class="crest"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Coat_of_arms_of_Serbia_%282004-2010%29.svg"></div><div><b>BALKAN BORDERS RP</b><small>STAFF PORTAL · ${bbEscape(me.display||me.username)}</small></div></div><div class="public-actions"><button class="btn ghost" onclick="logout()">Sign out</button></div></header><div class="ministry-hub"><div class="eyebrow">GOVERNMENT WORKSPACE</div><h1>Select a ministry</h1><p class="muted">Choose the department you are authorised to access.</p>${bbIsAdmin()?'<div class="admin-tools"><span class="tag gold">Main administrator</span><button class="btn" onclick="bbManageMemberships()">Manage ministry access</button><button class="btn primary" onclick="bbShowRolePanel()">Manage roles</button></div>':''}<div class="ministry-grid">${cards||'<div class="empty">No ministry access has been assigned to this account. Contact the main administrator.</div>'}</div><div class="coming">CITIZEN ACCOUNT · COMING SOON</div></div></div>`;
 }
-function bbEnterMinistry(id){if(!bbIsAdmin()&&!bbMembership(id)&&!(id==='finance'&&bbMembership('government')?.position==='Prime Minister'))return toast('You do not have access to this ministry.');activeMinistry=id;if(id==='defence'){page='dashboard';render();}else render();}
+function bbEnterMinistry(id){
+ const ministry=BB_MINISTRIES.find(m=>m.id===id);
+ if(!ministry)return toast('This ministry does not exist.');
+ const allowed=bbIsAdmin()||!!bbMembership(id)||(id==='finance'&&bbMembership('government')?.position==='Prime Minister');
+ if(!allowed)return toast('You do not have access to this ministry.');
+ activeMinistry=id;
+ if(id==='defence'){page='dashboard';render();return;}
+ bbRenderMinistry(id);
+}
 function bbBackToMinistries(){activeMinistry=null;render();}
 const bbOriginalLogout=logout;
 async function logout(){activeMinistry=null;await bbOriginalLogout();}
@@ -550,6 +559,7 @@ function bbUnassignRole(userId,roleId){
 
 function bbRenderMinistry(id){
  const m=BB_MINISTRIES.find(x=>x.id===id);if(!m)return bbBackToMinistries();
+ if(!bbIsAdmin()&&!bbMembership(id)&&!(id==='finance'&&bbMembership('government')?.position==='Prime Minister'))return bbBackToMinistries();
  const internal=id==='government';
  const rows=(db.announcements||[]).filter(a=>a.ministry===id&&(a.visibility!=='internal'||bbMembership('government')||bbIsAdmin())).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
  let body='';
