@@ -387,6 +387,7 @@ const BB_MINISTRIES=[
 ];
 const BB_LANGS=[['en','English'],['sr-Latn','Srpski · Latinica'],['sr-Cyrl','Српски · Ћирилица'],['bs','Bosanski'],['hr','Hrvatski'],['cnr','Crnogorski'],['mk','Македонски'],['sl','Slovenščina']];
 let activeMinistry=null,publicFilter='all',publicItems=[];
+lang='en';
 const bbOriginalRender=render;
 function bbIsAdmin(){return !!me?.isMainAdmin;}
 function bbMembership(ministry){return (db?.ministryMembers||[]).find(x=>x.userId===me?.id&&x.ministry===ministry)||null;}
