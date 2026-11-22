@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="sr-Latn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
+<title>Ministarstvo Odbrane | Kraljevina Srbija [Balkan Borders RP]</title>
+<style>
+:root{--bg:#090c12;--panel:#111722;--panel2:#151e2b;--line:#263244;--text:#edf1f7;--muted:#94a2b5;--gold:#d9ad4b;--gold2:#f0cb75;--red:#e06b70;--green:#62c49a;--blue:#75a9e8;--shadow:0 18px 50px #0008}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 70% -20%,#1a2637 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}
+.app{min-height:100vh;display:flex}.sidebar{width:252px;flex-shrink:0;background:#0d121b;border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:22px;min-height:100vh}
+.brand{display:flex;gap:12px;align-items:center;padding:3px 9px 18px;border-bottom:1px solid var(--line)}
+.crest{width:43px;height:43px;display:grid;place-items:center;flex-shrink:0;overflow:hidden}.crest img{display:block;width:100%;height:100%;object-fit:contain;background:transparent}.login .crest{width:76px;height:76px;margin:0 auto 12px}.loginbrand .crest{border:0;background:transparent}
+.brand b{display:block;font-size:13px;letter-spacing:.08em}.brand small{color:var(--muted);font-size:10px;letter-spacing:.12em}
+.navlabel{color:#67778d;font-size:10px;font-weight:800;letter-spacing:.16em;padding:0 11px;margin-bottom:5px}
+.nav{display:grid;gap:4px}.nav button{border:0;color:#aeb9c8;background:transparent;text-align:left;padding:11px 12px;border-radius:9px;display:flex;align-items:center;gap:12px;font-weight:600}.nav button:hover,.nav button.active{background:#1b2635;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--gold)}.nav .ico{width:19px;text-align:center;color:var(--gold2);font-size:16px}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:14px 8px 0;color:var(--muted);font-size:11px}
+.main{flex:1;min-width:0}.topbar{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:#0c1119c9;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.top-left{display:flex;align-items:center;gap:12px}.mobile-menu{display:none;background:transparent;border:0;color:var(--text);font-size:22px}.crumb{color:var(--muted);font-size:12px}.top-actions{display:flex;align-items:center;gap:10px}
+select,.select{background:#111925;color:var(--text);border:1px solid var(--line);padding:9px 11px;border-radius:8px}
+.user-pill{display:flex;align-items:center;gap:9px;padding-left:12px;border-left:1px solid var(--line)}.avatar{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#47391e;color:var(--gold2);font-weight:800}
+.content{padding:30px;max-width:1500px;margin:auto}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:23px}.eyebrow{color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.pagehead h1{font-size:27px;letter-spacing:-.03em;margin:5px 0}.sub{color:var(--muted);margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#172130;color:var(--text);padding:9px 13px;border-radius:8px;font-weight:700}.btn:hover{filter:brightness(1.15)}.btn.primary{background:linear-gradient(135deg,#d8ad50,#b98a32);border-color:#d8ad50;color:#17130a}.btn.danger{background:#351d25;border-color:#67313b;color:#ffb6bb}.btn.ghost{background:transparent}.btn.small{padding:6px 9px;font-size:12px}.promotion-alert{white-space:nowrap;box-shadow:0 0 0 1px #d9ad4b55}
+.grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:18px}.card{background:linear-gradient(145deg,#141d29,#101722);border:1px solid var(--line);border-radius:13px;padding:17px;box-shadow:0 8px 25px #0002}.stat{display:flex;justify-content:space-between;align-items:flex-start}.stat .label{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:27px;margin-top:6px}.stat .symbol{width:37px;height:37px;border-radius:10px;background:#2a2519;color:var(--gold2);display:grid;place-items:center;font-size:18px}
+.two{grid-template-columns:1.25fr .75fr}.card h3{margin:0 0 13px;font-size:14px}.muted{color:var(--muted)}.activity{display:grid;gap:12px}.activity-item{display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #202b39;padding-bottom:10px}.dot{width:8px;height:8px;background:var(--gold);border-radius:50%;margin-top:6px;flex-shrink:0}.activity-item small{color:var(--muted);display:block;margin-top:2px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.search{position:relative;flex:1;min-width:210px}.search input{width:100%;padding:10px 12px 10px 36px}.search:before{content:"⌕";position:absolute;left:12px;top:5px;color:var(--muted);font-size:21px}
+input,textarea{background:#0d141e;color:var(--text);border:1px solid #2a3748;border-radius:8px;padding:10px 11px;outline:none;width:100%}input:focus,textarea:focus,select:focus{border-color:#b58a3e;box-shadow:0 0 0 3px #d9ad4b1c}textarea{min-height:90px;resize:vertical}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:11px;background:#101722}table{border-collapse:collapse;width:100%;min-width:720px}th{text-align:left;color:#8f9db0;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:#141e2b;padding:12px 14px}td{padding:13px 14px;border-top:1px solid #222e3e;vertical-align:middle}tr:hover td{background:#ffffff05}.namecell b{display:block}.namecell small{color:var(--muted)}.tag{display:inline-flex;align-items:center;border:1px solid #38465a;background:#192536;color:#c9d5e4;padding:3px 8px;border-radius:20px;font-size:11px;white-space:nowrap}.tag.gold{border-color:#6d5528;background:#302717;color:#f2d18a}.tag.green{border-color:#275d49;background:#142d25;color:#8de0b7}.tag.red{border-color:#63343c;background:#321c23;color:#ffadb3}
+.empty{padding:32px;text-align:center;color:var(--muted)}.section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 0 12px}.section-title h3{margin:0}
+.briga-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.brigade-card h3{font-size:16px}.brigade-card p{color:var(--muted);font-size:12px}.brigade-card .count{font-size:24px;font-weight:800;color:var(--gold2)}
+.rank-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.rank-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#111a26}.rank-row b{font-size:13px}.rank-row small{color:var(--muted)}
+.modalback{position:fixed;inset:0;background:#000a;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}.modalback.show{display:flex}.modal{width:min(650px,100%);max-height:92vh;overflow:auto;background:#111925;border:1px solid #39475a;border-radius:15px;box-shadow:var(--shadow)}.modalhead{display:flex;justify-content:space-between;align-items:center;padding:17px 20px;border-bottom:1px solid var(--line)}.modalhead h2{font-size:17px;margin:0}.x{border:0;background:transparent;color:var(--muted);font-size:23px}.modalbody{padding:19px 20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#aab7c8;font-weight:700}.hint{font-size:11px;color:var(--muted)}.modalfoot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}.checkrow{display:flex;gap:8px;align-items:center;color:#cbd5e1;font-size:12px}.checkrow input{width:auto;accent-color:#d9ad4b}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,rgba(4,8,14,.68),rgba(4,8,14,.78)),url("https://th.bing.com/th/id/R.2fceff1518891da82b230bbad1b1c41a?rik=HFPXB%2bDf3IWtIg&riu=http%3a%2f%2fczrs.gov.rs%2fwp-content%2fuploads%2f2025%2f09%2fmls-7297-1758379332-Copy.jpg&ehk=xXBJlioJQNd%2bk6n1xDrbl2ACURuiumFyhzKdiWBwb4U%3d&risl=&pid=ImgRaw&r=0") center center/cover no-repeat fixed}.loginbox{position:relative;width:min(420px,100%);background:rgba(12,18,28,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid #ffffff35;border-radius:17px;padding:27px;box-shadow:0 24px 70px #000a}.loginbrand{text-align:center;margin-bottom:22px}.loginbrand h1{font-size:21px;margin:0}.loginbrand p{color:var(--muted);font-size:11px;letter-spacing:.14em;margin:4px}.loginbox .field{margin:13px 0}.loginbox .btn{width:100%;margin-top:9px;padding:12px}.demo{margin-top:17px;padding:12px;border:1px dashed #4b432e;border-radius:9px;color:#c6b88f;font-size:11px;line-height:1.7}
+.toast{position:fixed;bottom:20px;right:20px;background:#1b2a26;border:1px solid #376b55;color:#b6f1d2;padding:11px 15px;border-radius:9px;z-index:40;box-shadow:var(--shadow);display:none}.toast.show{display:block}
+.mobile-nav{display:none}
+@media(max-width:950px){.sidebar{width:220px}.content{padding:23px}.stats{grid-template-columns:repeat(2,1fr)}.briga-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.app{display:block}.sidebar{position:fixed;z-index:15;left:-270px;top:0;bottom:0;width:255px;transition:left .2s;box-shadow:var(--shadow)}.sidebar.open{left:0}.mobile-menu{display:block}.topbar{height:60px;padding:0 14px}.crumb{display:none}.top-actions{gap:6px}.top-actions select{max-width:105px;padding:8px 5px;font-size:11px}.user-pill{padding-left:7px}.user-pill span{display:none}.content{padding:20px 14px 90px}.pagehead{display:block}.pagehead h1{font-size:23px}.pagehead .actions{margin-top:14px}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:23px}.stat .symbol{width:31px;height:31px}.two,.briga-grid{grid-template-columns:1fr}.rank-list{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:10;background:#0d131d;border-top:1px solid var(--line);justify-content:space-around;padding:8px 3px calc(8px + env(safe-area-inset-bottom))}.mobile-nav button{border:0;background:transparent;color:#9eacbd;font-size:10px;display:grid;gap:2px;justify-items:center}.mobile-nav button b{font-size:18px;color:var(--gold2)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="modalback" id="modalback"><div class="modal"><div class="modalhead"><h2 id="modaltitle">Details</h2><button class="x" onclick="closeModal()">×</button></div><div class="modalbody" id="modalbody"></div><div class="modalfoot" id="modalfoot"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='rsaf_prototype_v1';
+const PERMS=['soldiers.view','soldiers.manage','trainings.manage','deployments.manage','ranks.manage','brigades.manage','users.manage','audit.view'];
+const defaultData={
+ users:[
+   ],
+ ranks:['Vojnik','Razvodnik','Desetar','Mlađi Vodnik','Vodnik','Stariji Vodnik','Zastavnik','Potporučnik','Poručnik','Kapetan','Major','Potpukovnik','Pukovnik','Brigadni General','General-Major','General Potpukovnik','Armijski General'],
+ brigades:[{id:'b1',name:'1. Gardijska brigada',description:'Gardijske i ceremonijalne dužnosti'},{id:'b2',name:'2. Pešadijska brigada',description:'Osnovna kopnena jedinica'},{id:'b3',name:'Specijalna jedinica',description:'Posebne zadatke odobrava komanda'}],
+ soldiers:[],
+ trainings:[],deployments:[],promotionPoints:{'Vojnik':0,'Razvodnik':25,'Desetar':50,'Mlađi Vodnik':80,'Vodnik':115,'Stariji Vodnik':155,'Zastavnik':200,'Potporučnik':250,'Poručnik':310,'Kapetan':380,'Major':460,'Potpukovnik':550,'Pukovnik':650,'Brigadni General':760,'General-Major':880,'General Potpukovnik':1010,'Armijski General':1150},audit:[]
+};
+let db,me=null,page='dashboard',lang='sr-Latn';
+function soldierDashboard(){
+ const s=db.soldiers.find(x=>x.id===me.soldierId);
+ if(!s)return `<div class="pagehead"><div><h1>Nalog nije povezan</h1><p class="sub">Obrati se administratoru.</p></div></div>`;
+ const next=nextRankInfo(s),remaining=next?Math.max(0,next.required-(+s.points||0)):0;
+ const trainingRows=db.trainings.flatMap(tr=>tr.attendees.filter(a=>a.soldierId===s.id).map(a=>({title:tr.title,date:tr.date,points:a.points,notes:a.notes,type:'Trening'})));
+ const eventRows=(db.deployments||[]).flatMap(ev=>ev.attendees.filter(a=>a.soldierId===s.id).map(a=>({title:ev.title,date:ev.date,points:a.points,notes:a.notes,type:ev.kind})));
+ const history=[...trainingRows,...eventRows].sort((a,b)=>new Date(b.date)-new Date(a.date));
+ return head('Moj vojnički profil','Lični pregled podataka i napretka.')+
+ `<div class="grid stats">
+ <div class="card stat"><div><span class="label">Trenutni broj poena</span><strong>${Number(s.points)||0}</strong></div><div class="symbol">★</div></div>
+ <div class="card stat"><div><span class="label">Trenutni čin</span><strong style="font-size:19px">${esc(s.rank)}</strong></div><div class="symbol">♜</div></div>
+ <div class="card stat"><div><span class="label">Strikes</span><strong>${Number(s.strikes)||0}</strong></div><div class="symbol">!</div></div>
+ <div class="card stat"><div><span class="label">Brigada</span><strong style="font-size:17px">${esc(s.brigade||'Nije raspoređen')}</strong></div><div class="symbol">⚑</div></div>
+ </div>
+ <div class="grid two">
+ <div class="card"><h3>Napredak ka sledećem činu</h3>${next?`<p class="muted">Sledeći čin: <b>${esc(next.next)}</b></p><h2>${Number(s.points)||0} / ${next.required} poena</h2><div style="height:10px;background:#263244;border-radius:20px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.max(0,(Number(s.points)||0)/Math.max(1,next.required)*100))}%;background:linear-gradient(90deg,#b98a32,#f0cb75)"></div></div><p class="muted">${remaining===0?'Ispunjen je uslov za razmatranje unapređenja.':'Potrebno još '+remaining+' poena.'}</p>`:'<p class="muted">Dostignut je najviši čin u trenutnoj listi.</p>'}</div>
+ <div class="card"><h3>Moji podaci</h3><p><span class="muted">Roblox:</span> <b>${esc(s.roblox)}</b></p><p><span class="muted">Discord:</span> <b>${esc(s.discord)}</b></p><p><span class="muted">Datum registracije:</span> ${new Date(s.registered).toLocaleDateString()}</p><p><span class="muted">Napomene:</span> ${esc(s.notes||'Nema napomena.')}</p></div>
+ </div>
+ <div class="card" style="margin-top:15px"><h3>Moje aktivnosti</h3>${history.map(a=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(a.title)} · ${esc(a.type)}</b><small>${date(a.date)} · ${a.points>=0?'+':''}${a.points} poena${a.notes?' · '+esc(a.notes):''}</small></div></div>`).join('')||'<p class="muted">Još nema evidentiranih aktivnosti.</p>'}</div>`;
+}
+function renderSoldier(){
+ document.getElementById('root').innerHTML=`<div class="app"><main class="main" style="width:100%"><header class="topbar"><div class="brand"><div class="crest"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Coat_of_arms_of_Serbia_%282004-2010%29.svg" alt="Grb Republike Srbije"></div><div><b>MOJ VOJNIČKI NALOG</b><small>KRALJEVINA SRBIJA</small></div></div><div class="top-actions"><div class="user-pill"><div class="avatar">${esc(me.display?.[0]||'V').toUpperCase()}</div><span>${esc(me.display||me.username)}<br><small class="muted">Vojnik</small></span></div><button class="btn small ghost" onclick="logout()">↪ Odjava</button></div></header><section class="content" id="view"></section></main></div>`;
+ document.getElementById('view').innerHTML=soldierDashboard();
+}
+
+
+function save(){
+ if(!db)return;
+ clearTimeout(window.__saveTimer);
+ window.__saveTimer=setTimeout(async()=>{
+  try{
+   const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(db)});
+   if(!r.ok){console.error('Cloud save failed',await r.text());toast('Greška pri čuvanju u bazi.');}
+  }catch(err){console.error(err);toast('Nema veze sa serverom. Promene nisu sinhronizovane.');}
+ },250);
+}
+function toCyrillic(v){const map={'Lj':'Љ','LJ':'Љ','Nj':'Њ','NJ':'Њ','Dž':'Џ','DŽ':'Џ','lj':'љ','nj':'њ','dž':'џ','A':'А','B':'Б','V':'В','G':'Г','D':'Д','Đ':'Ђ','E':'Е','Ž':'Ж','Z':'З','I':'И','J':'Ј','K':'К','L':'Л','M':'М','N':'Н','O':'О','P':'П','R':'Р','S':'С','T':'Т','Ć':'Ћ','U':'У','F':'Ф','H':'Х','C':'Ц','Č':'Ч','Š':'Ш','a':'а','b':'б','v':'в','g':'г','d':'д','đ':'ђ','e':'е','ž':'ж','z':'з','i':'и','j':'ј','k':'к','l':'л','m':'м','n':'н','o':'о','p':'п','r':'р','s':'с','t':'т','ć':'ћ','u':'у','f':'ф','h':'х','c':'ц','č':'ч','š':'ш'};return v.replace(/Dž|DŽ|Lj|LJ|Nj|NJ|dž|lj|nj|[A-Za-zĐđŽžĆćČčŠš]/g,x=>map[x]||x)}
+function t(a,b,c){if(lang==='en')return c;if(lang==='sr-Cyrl')return toCyrillic(a);return a}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function isAdmin(){return !!me&&me.id==='u1'}
+function has(p){return !!me&&(isAdmin()||(me.permissions||[]).includes('*')||(me.permissions||[]).includes(p))}
+function isRoyal(){return isAdmin()}
+function log(action,details){db.audit.unshift({id:crypto.randomUUID(),user:me?.username||'system',action,details,time:new Date().toISOString()});save()}
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2600)}
+function date(s){return s?new Date(s).toLocaleString():'—'}
+function loginScreen(){document.getElementById('root').innerHTML=`<div class="login"><div class="loginbox"><div class="loginbrand"><div class="crest"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Coat_of_arms_of_Serbia_%282004-2010%29.svg" alt="Grb Republike Srbije"></div><h1>Balkan Borders RP</h1><p>REPUBLIC OF SERBIA · GOVERNMENT PORTAL</p></div><h3 style="text-align:center">Government access</h3><form onsubmit="login(event)"><div class="field"><label>Username</label><input id="loginuser" autocomplete="username" required></div><div class="field"><label>Password</label><input id="loginpass" type="password" autocomplete="current-password" required></div><button class="btn primary">Sign in</button></form><div class="demo"><b>Citizen services · COMING SOON</b><br>Citizen accounts and registration are not yet available.</div><div id="publicfeed" style="margin-top:16px"></div></div></div>`;loadPublicFeed();}
+async function loadPublicFeed(){try{const r=await fetch('/api/public/feed');if(!r.ok)return;const data=await r.json();const el=document.getElementById('publicfeed');if(el)el.innerHTML='<h3>Latest public announcements</h3>'+(data.posts||[]).slice(0,5).map(p=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(p.title)}</b><small>${esc(p.ministryName||'Government')} · ${date(p.createdAt)}</small><p>${esc(p.body||'')}</p></div></div>`).join('');}catch(e){console.warn('Public feed unavailable',e)}}
+async function login(e){
+ e.preventDefault();
+ const username=document.getElementById('loginuser').value.trim();
+ const password=document.getElementById('loginpass').value;
+ try{
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username,password})});
+  const result=await r.json();
+  if(!r.ok)return toast(result.error||'Pogrešno korisničko ime ili lozinka');
+  me=result.user;
+  const stateResponse=await fetch('/api/state',{credentials:'same-origin'});
+  if(!stateResponse.ok)throw new Error('Ne mogu da učitam podatke iz baze.');
+  db=await stateResponse.json();
+  if(!db.users||!db.soldiers)throw new Error('Baza nema ispravne podatke.');
+  ensureExtendedData();ensurePortalData();page='portal';
+  log('LOGIN','Prijava na sistem');
+  render();
+ }catch(err){console.error(err);toast(err.message||'Greška pri prijavi.');}
+}
+async function logout(){
+ try{await fetch('/api/logout',{method:'POST',credentials:'same-origin'});}catch(e){}
+ me=null;db=null;loginScreen();
+}
+const navItems=[['portal','🏛','Portali ministarstava','Government portal',null],['dashboard','▦','Kontrolna tabla','Dashboard',null],['soldiers','♟','Vojnici','Soldiers','soldiers.view'],['trainings','▤','Treninzi','Trainings','soldiers.view'],['deployments','⚑','Deployment & Rally','Deployments & rallies','deployments.manage'],['brigades','⚑','Brigade','Brigades','brigades.manage'],['ranks','★','Činovi','Ranks','ranks.manage'],['users','♙','Nalozi i dozvole','Accounts & permissions','users.manage'],['audit','◷','Audit log','Audit log','audit.view']];
+function render(){if(!me){loginScreen();return}if(me.role==='Soldier'){renderSoldier();return}let nav=navItems.filter(n=>!n[4]||has(n[4])||(n[0]==='trainings'&&has('trainings.manage'))||(n[0]==='audit'&&isRoyal())).map(n=>`<button class="${page===n[0]?'active':''}" onclick="go('${n[0]}')"><span class="ico">${n[1]}</span>${t(n[2],n[2],n[3])}</button>`).join('');document.getElementById('root').innerHTML=`<div class="app"><aside class="sidebar" id="sidebar"><div class="brand"><div class="crest"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d8/Coat_of_arms_of_Serbia_%282004-2010%29.svg" alt="Grb Republike Srbije"></div><div><b>${t('MINISTARSTVO ODBRANE','МИНИСТАРСТВО ОДБРАНЕ','MINISTRY OF DEFENCE')}</b><small>KRALJEVINA SRBIJA</small></div></div><div><div class="navlabel">${t('GLAVNI MENI','ГЛАВНИ МЕНИ','MAIN MENU')}</div><nav class="nav">${nav}</nav></div><div class="sidebar-bottom">ROYAL SERBIAN ARMED FORCES</div></aside><main class="main"><header class="topbar"><div class="top-left"><button class="mobile-menu" onclick="toggleSide()">☰</button><span class="crumb">KRALJEVINA SRBIJA / ${page.toUpperCase()}</span></div><div class="top-actions"><select onchange="setLang(this.value)"><option value="sr-Latn" ${lang==='sr-Latn'?'selected':''}>Srpski · Latinica</option><option value="sr-Cyrl" ${lang==='sr-Cyrl'?'selected':''}>Српски · Ћирилица</option><option value="en" ${lang==='en'?'selected':''}>English</option></select><div class="user-pill"><div class="avatar">${esc(me.display?.[0]||me.username[0]).toUpperCase()}</div><span>${esc(me.display||me.username)}<br><small class="muted">${esc(me.role)}</small></span></div><button class="btn small ghost" onclick="logout()">↪</button></div></header><section class="content" id="view"></section><nav class="mobile-nav">${[['dashboard','▦','Home'],['soldiers','♟','Soldiers'],['trainings','▤','Training'],['brigades','⚑','Brigades']].filter(x=>x[0]==='dashboard'||x[0]==='soldiers'&&has('soldiers.view')||x[0]==='trainings'&&(has('soldiers.view')||has('trainings.manage'))||x[0]==='brigades'&&has('brigades.manage')).map(x=>`<button onclick="go('${x[0]}')"><b>${x[1]}</b>${x[2]}</button>`).join('')}</nav></main></div>`;drawPage()}
+function toggleSide(){document.getElementById('sidebar').classList.toggle('open')}
+function setLang(v){lang=v;render()}
+function go(p){page=p;render()}
+function head(title,sub,button=''){return `<div class="pagehead"><div><div class="eyebrow">ROYAL SERBIAN ARMED FORCES</div><h1>${title}</h1><p class="sub">${sub}</p></div><div class="actions">${button}</div></div>`}
+function drawPage(){let v=document.getElementById('view');if(!v)return;switch(page){case'portal':v.innerHTML=portalHome();break;case'ministry':renderMinistry();return;case'dashboard':v.innerHTML=dashboard();break;case'soldiers':v.innerHTML=soldiersPage();break;case'trainings':v.innerHTML=trainingsPage();break;case'deployments':v.innerHTML=deploymentsPage();break;case'brigades':v.innerHTML=brigadesPage();break;case'ranks':v.innerHTML=ranksPage();break;case'users':v.innerHTML=usersPage();break;case'audit':v.innerHTML=auditPage();break;default:v.innerHTML=dashboard()}}
+function dashboard(){let active=db.soldiers.length,train=db.trainings.length,points=db.soldiers.reduce((a,s)=>a+(+s.points||0),0);return head(t('Kontrolna tabla','Контролна табла','Dashboard'),t('Pregled stanja Kraljevskih oružanih snaga.','Преглед стања Краљевских оружаних снага.','Overview of the Royal Serbian Armed Forces.'),has('soldiers.manage')?`<button class="btn primary" onclick="soldierModal()">+ ${t('Dodaj vojnika','Додај војника','Add soldier')}</button>`:'')+`<div class="grid stats"><div class="card stat"><div><span class="label">${t('Registrovani vojnici','Регистровани војници','Registered soldiers')}</span><strong>${active}</strong></div><div class="symbol">♟</div></div><div class="card stat"><div><span class="label">${t('Treninzi','Тренинзи','Trainings')}</span><strong>${train}</strong></div><div class="symbol">▤</div></div><div class="card stat"><div><span class="label">${t('Aktivne brigade','Активне бригаде','Active brigades')}</span><strong>${db.brigades.length}</strong></div><div class="symbol">⚑</div></div><div class="card stat"><div><span class="label">${t('Ukupno poena','Укупно поена','Total points')}</span><strong>${points}</strong></div><div class="symbol">★</div></div></div><div class="grid two"><div class="card"><h3>${t('Nedavno registrovani vojnici','Недавно регистровани војници','Recently registered soldiers')}</h3>${db.soldiers.slice(0,5).map(s=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(s.roblox)}</b><small>${esc(s.rank)} · ${date(s.registered)}</small></div></div>`).join('')||'<div class="empty">Nema vojnika.</div>'}</div><div class="card"><h3>${t('Poslednje aktivnosti','Последње активности','Recent activity')}</h3><div class="activity">${(isRoyal()?db.audit:db.audit.filter(a=>a.user===me.username)).slice(0,6).map(a=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(a.action)}</b><small>${esc(a.user)} · ${esc(a.details)} · ${date(a.time)}</small></div></div>`).join('')||'<div class="empty">Još nema aktivnosti.</div>'}</div></div></div>`}
+function soldiersPage(){if(!has('soldiers.view'))return '<div class="empty">Nemate dozvolu za pregled vojnika.</div>';let q=(window.sq||'').toLowerCase();let arr=db.soldiers.filter(s=>(s.roblox+' '+s.discord+' '+s.rank+' '+s.brigade).toLowerCase().includes(q));return head(t('Vojnici','Војници','Soldiers'),t('Evidencija, činovi, poeni i disciplinske beleške.','Евиденција, чинови, поени и дисциплинске белешке.','Personnel records, ranks, points and disciplinary notes.'),has('soldiers.manage')?`<button class="btn primary" onclick="soldierModal()">+ ${t('Dodaj vojnika','Додај војника','Add soldier')}</button>`:'')+`<div class="toolbar"><div class="search"><input placeholder="${t('Pretraži Roblox, Discord ili čin...','Претражи Roblox, Discord или чин...','Search Roblox, Discord or rank...')}" value="${esc(window.sq||'')}" oninput="window.sq=this.value;drawPage()"></div><span class="tag">${arr.length} / ${db.soldiers.length}</span></div><div class="tablewrap"><table><thead><tr><th>Roblox / Discord</th><th>${t('Čin','Чин','Rank')}</th><th>${t('Brigada','Бригада','Brigade')}</th><th>${t('Poeni','Поени','Points')}</th><th>${t('Strikes','Страјкови','Strikes')}</th><th>${t('Registrovan','Регистрован','Registered')}</th><th></th></tr></thead><tbody>${arr.map(s=>`<tr><td class="namecell"><b>${esc(s.roblox)}</b><small>${esc(s.discord)}</small></td><td><span class="tag gold">${esc(s.rank)}</span></td><td>${esc(s.brigade||'—')}</td><td><b>${s.points}</b></td><td>${s.strikes?`<span class="tag red">${s.strikes}</span>`:'—'}</td><td>${new Date(s.registered).toLocaleDateString()}</td><td>${has('soldiers.manage')?`<button class="btn small" onclick="soldierModal('${s.id}')">Manage</button>`:`<button class="btn small" onclick="viewSoldier('${s.id}')">View</button>`}</td></tr>`).join('')||`<tr><td colspan="7" class="empty">Nema rezultata.</td></tr>`}</tbody></table></div>`}
+function soldierModal(id){
+ if(!has('soldiers.manage'))return;
+ let s=db.soldiers.find(x=>x.id===id)||{roblox:'',discord:'',rank:db.ranks[0]||'Vojnik',points:0,brigade:'',strikes:0,notes:'',userId:null};
+ let account=s.userId?db.users.find(u=>u.id===s.userId):db.users.find(u=>u.soldierId===s.id);
+ openModal(id?'Upravljanje vojnikom':'Registracija vojnika',
+ `<div class="formgrid">
+ <div class="field"><label>Roblox username *</label><input id="froblox" value="${esc(s.roblox)}" required></div>
+ <div class="field"><label>Discord username *</label><input id="fdiscord" value="${esc(s.discord)}" required></div>
+ <div class="field"><label>Military rank</label><select id="frank">${db.ranks.map(r=>`<option ${r===s.rank?'selected':''}>${esc(r)}</option>`).join('')}</select></div>
+ <div class="field"><label>Points</label><input id="fpoints" type="number" min="0" value="${s.points||0}"></div>
+ <div class="field"><label>Brigade</label><select id="fbrigade"><option value="">— Unassigned —</option>${db.brigades.map(b=>`<option ${b.name===s.brigade?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
+ <div class="field"><label>Strikes</label><input id="fstrikes" type="number" min="0" value="${s.strikes||0}"></div>
+ <div class="field full"><label>Notes</label><textarea id="fnotes">${esc(s.notes||'')}</textarea></div>
+ <div class="field full"><hr><h3 style="margin:4px 0">Nalog vojnika</h3><p class="hint">Vojnik se ovim podacima prijavljuje i vidi samo svoj profil, poene i treninge na kojima je prisustvovao.</p></div>
+ <div class="field"><label>Korisničko ime</label><input id="fsoldieruser" value="${esc(account?.username||'')}" placeholder="Automatski generiši"></div>
+ <div class="field"><label>Lozinka</label><input id="fsoldierpass" type="password" value="" placeholder="${account?'Prazno = zadrži postojeću lozinku':'Automatski generiši'}"></div>
+ ${account?`<div class="field full"><span class="tag green">Nalog je povezan</span> <span class="muted">${esc(account.username)}</span></div>`:`<div class="field full"><span class="tag">Nalog još nije kreiran — biće automatski napravljen ako ostaviš polja prazna.</span></div>`}
+ </div>`,
+ id?`<button class="btn danger" onclick="removeSoldier('${id}')">Remove soldier</button>`:'',
+ `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveSoldier('${id||''}')">Save soldier</button>`);
+}
+function makeSoldierUsername(){
+ const base='vojnik'+Math.random().toString(36).slice(2,7);let name=base,n=2;
+ while(db.users.some(u=>u.username.toLowerCase()===name.toLowerCase()))name=base+n++;
+ return name;
+}
+function makeSoldierPassword(){
+ const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';let out='';
+ for(let i=0;i<12;i++)out+=chars[crypto.getRandomValues(new Uint32Array(1))[0]%chars.length];
+ return out;
+}
+async function saveSoldier(id){
+ if(!has('soldiers.manage'))return;
+ const roblox=document.getElementById('froblox').value.trim(),discord=document.getElementById('fdiscord').value.trim();
+ if(!roblox||!discord)return toast('Unesi oba username-a.');
+ const old=db.soldiers.find(x=>x.id===id),soldierId=old?.id||crypto.randomUUID();
+ let account=(old?.userId?db.users.find(u=>u.id===old.userId):null)||db.users.find(u=>u.soldierId===soldierId);
+ const requestedUsername=(document.getElementById('fsoldieruser')?.value||'').trim();
+ const requestedPassword=(document.getElementById('fsoldierpass')?.value||'').trim();
+ const username=requestedUsername||account?.username||makeSoldierUsername();
+ const password=requestedPassword||(!account?makeSoldierPassword():'');
+ if(db.users.some(u=>u.username.toLowerCase()===username.toLowerCase()&&u.id!==account?.id))return toast('To korisničko ime već postoji. Izaberi drugo.');
+ const soldier={id:soldierId,roblox,discord,rank:document.getElementById('frank').value,points:Math.max(0,+document.getElementById('fpoints').value||0),brigade:document.getElementById('fbrigade').value,strikes:Math.max(0,+document.getElementById('fstrikes').value||0),notes:document.getElementById('fnotes').value,registered:old?.registered||new Date().toISOString(),userId:account?.id||null};
+ try{
+  if(!account){const r=await fetch('/api/soldier-accounts',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username,display:roblox,password,soldierId})});const x=await r.json();if(!r.ok)return toast(x.error||'Kreiranje vojničkog naloga nije uspelo.');account=x.user;db.users.push(account);}
+  else{if(requestedUsername&&requestedUsername!==account.username){const r=await fetch('/api/soldier-accounts/'+encodeURIComponent(account.id),{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username:requestedUsername,display:roblox,soldierId})});const x=await r.json();if(!r.ok)return toast(x.error||'Izmena naloga nije uspela.');Object.assign(account,x.user);}
+   else{account.display=roblox;account.soldierId=soldierId;}
+   if(requestedPassword){const r=await fetch('/api/soldier-accounts/'+encodeURIComponent(account.id)+'/password',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({password:requestedPassword})});const x=await r.json();if(!r.ok)return toast(x.error||'Promena lozinke nije uspela.');}
+  }
+  soldier.userId=account.id;if(old)Object.assign(old,soldier);else db.soldiers.unshift(soldier);
+  log(old?'EDIT_SOLDIER':'ADD_SOLDIER',roblox+' · '+discord+' · account '+username);save();closeModal();drawPage();
+  const oneTimePassword=password||requestedPassword;
+  openModal('Nalog vojnika sačuvan',`<p>Nalog je povezan sa vojnikom <b>${esc(roblox)}</b>.</p><div class="card"><p><span class="muted">Korisničko ime</span><br><b style="font-size:18px">${esc(username)}</b></p>${oneTimePassword?`<p><span class="muted">Nova lozinka (prikaže se samo sada)</span><br><b style="font-size:18px;letter-spacing:.06em">${esc(oneTimePassword)}</b></p>`:'<p class="muted">Postojeća lozinka nije prikazana.</p>'}</div><p class="hint">Sačuvaj podatke i predaj ih vojniku. Lozinka se više neće prikazivati.</p>`,`<button class="btn" onclick="copyAccountCredentials('${esc(username)}','${esc(oneTimePassword)}')">Kopiraj podatke</button>`,`<button class="btn primary" onclick="closeModal()">Zatvori</button>`);
+ }catch(e){console.error(e);toast('Greška pri čuvanju vojničkog naloga.');}
+}
+function copyAccountCredentials(username,password){const value='Username: '+username+(password?'\nPassword: '+password:'');if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>toast('Podaci su kopirani.')).catch(()=>toast('Kopiranje nije uspelo.'));else toast('Kopiranje nije podržano u ovom pregledaču.');}
+async function removeSoldier(id){let s=db.soldiers.find(x=>x.id===id);if(!s||!confirm('Ukloniti vojnika '+s.roblox+'? Nalog će ostati sačuvan, ali odvezan od dosijea.'))return;try{if(s.userId){const r=await fetch('/api/soldier-accounts/'+encodeURIComponent(s.userId),{method:'PATCH',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({soldierId:null})});if(!r.ok){const x=await r.json();return toast(x.error||'Nalog nije mogao biti odvezan.')}}db.soldiers=db.soldiers.filter(x=>x.id!==id);const u=db.users.find(x=>x.id===s.userId);if(u)u.soldierId=null;log('REMOVE_SOLDIER',s.roblox);save();closeModal();drawPage();toast('Vojnik uklonjen; korisnički nalog je sačuvan.')}catch(e){console.error(e);toast('Greška pri uklanjanju vojnika.')}}
+function viewSoldier(id){let s=db.soldiers.find(x=>x.id===id);openModal('Soldier profile',`<p><b>${esc(s.roblox)}</b> · ${esc(s.discord)}</p><p>Rank: ${esc(s.rank)} · Points: ${s.points}</p><p>Brigade: ${esc(s.brigade||'—')} · Strikes: ${s.strikes}</p><p>Registered: ${date(s.registered)}</p><p>${esc(s.notes)}</p>`,'',`<button class="btn" onclick="closeModal()">Close</button>`)}
+function trainingsPage(){let can=has('trainings.manage');return head(t('Treninzi','Тренинзи','Trainings'),t('Evidencija obuka i prisustva regruta.','Евиденција обука и присуства регрута.','Training sessions and recruit attendance.'),can?`<button class="btn primary" onclick="trainingModal()">+ ${t('Novi trening','Нови тренинг','New training')}</button>`:'')+db.trainings.map(tr=>`<div class="card" style="margin-bottom:12px"><div class="section-title"><div><h3>${esc(tr.title)}</h3><small class="muted">${date(tr.date)} · Instructor: ${esc(tr.instructor)}</small></div><span class="tag">${tr.attendees.length} ${t('polaznika','полазника','attendees')}</span></div><p class="muted">${esc(tr.notes||'')}</p>${can?`<button class="btn small" onclick="attendanceModal('${tr.id}')">Manage attendance</button> <button class="btn small danger" onclick="deleteTraining('${tr.id}')">Delete</button>`:''}<div style="margin-top:12px">${tr.attendees.map(a=>`<span class="tag">${esc(db.soldiers.find(s=>s.id===a.soldierId)?.roblox||'Removed soldier')} · ${a.points>=0?'+':''}${a.points} pts</span> `).join('')}</div></div>`).join('')||'<div class="card empty">Još nema treninga. Instruktor može da kreira prvi trening.</div>'}
+function trainingModal(){if(!has('trainings.manage'))return;openModal('Create training',`<div class="formgrid"><div class="field full"><label>Training title *</label><input id="ttitle" placeholder="Recruit Basic Training"></div><div class="field full"><label>Notes / description</label><textarea id="tnotes"></textarea></div></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveTraining()">Create training</button>`)}
+function saveTraining(){let title=document.getElementById('ttitle').value.trim();if(!title)return toast('Unesi naziv treninga.');let tr={id:crypto.randomUUID(),title,notes:document.getElementById('tnotes').value,date:new Date().toISOString(),instructor:me.username,attendees:[]};db.trainings.unshift(tr);log('CREATE_TRAINING',title);save();closeModal();drawPage();toast('Trening kreiran.')}
+function attendanceModal(id){let tr=db.trainings.find(x=>x.id===id);openModal('Manage attendance',`<p class="muted">${esc(tr.title)} · Search by Roblox or Discord username</p><div class="search" style="margin-bottom:12px"><input id="attsearch" placeholder="Search soldier..." oninput="searchAttendance('${id}')"></div><div id="attresults"></div><h3>Attendance list</h3><div id="attlist">${attendanceList(tr)}</div>`,'',`<button class="btn" onclick="closeModal()">Done</button>`);searchAttendance(id)}
+function attendanceList(tr){return tr.attendees.map(a=>{let s=db.soldiers.find(x=>x.id===a.soldierId);return s?`<div class="activity-item"><div class="dot"></div><div style="flex:1"><b>${esc(s.roblox)}</b><small>${esc(s.discord)} · ${a.points>=0?'+':''}${a.points} points · ${esc(a.notes||'No notes')}</small><button class="btn small" onclick="editAttendance('${tr.id}','${s.id}')">Edit points / notes</button></div></div>`:''}).join('')||'<p class="muted">No attendees yet.</p>'}
+function searchAttendance(id){let tr=db.trainings.find(x=>x.id===id),q=(document.getElementById('attsearch')?.value||'').toLowerCase();let list=db.soldiers.filter(s=>(s.roblox+' '+s.discord).toLowerCase().includes(q)&&!tr.attendees.some(a=>a.soldierId===s.id));document.getElementById('attresults').innerHTML=list.slice(0,8).map(s=>`<div class="activity-item"><div style="flex:1"><b>${esc(s.roblox)}</b><small>${esc(s.discord)} · ${esc(s.rank)}</small></div><button class="btn small primary" onclick="addAttendance('${id}','${s.id}')">Add</button></div>`).join('')||'<p class="muted">No matching available soldiers.</p>'}
+function addAttendance(tid,sid){let tr=db.trainings.find(x=>x.id===tid);tr.attendees.push({soldierId:sid,points:0,notes:''});log('TRAINING_ATTENDANCE',db.soldiers.find(s=>s.id===sid)?.roblox+' attended '+tr.title);save();attendanceModal(tid)}
+function editAttendance(tid,sid){let tr=db.trainings.find(x=>x.id===tid),a=tr.attendees.find(x=>x.soldierId===sid),s=db.soldiers.find(x=>x.id===sid);openModal('Attendance record',`<p><b>${esc(s.roblox)}</b> · Current points: ${s.points}</p><div class="formgrid"><div class="field"><label>Points to add / remove</label><input id="apoints" type="number" value="${a.points}"><span class="hint">Use a negative number to deduct points.</span></div><div class="field"><label>Soldier total points</label><input id="atotal" type="number" value="${s.points}"></div><div class="field full"><label>Training notes</label><textarea id="anotes">${esc(a.notes)}</textarea></div></div>`,'',`<button class="btn" onclick="attendanceModal('${tid}')">Back</button><button class="btn primary" onclick="saveAttendance('${tid}','${sid}')">Save record</button>`)}
+function saveAttendance(tid,sid){let tr=db.trainings.find(x=>x.id===tid),a=tr.attendees.find(x=>x.soldierId===sid),s=db.soldiers.find(x=>x.id===sid);let delta=+document.getElementById('apoints').value||0,total=Math.max(0,+document.getElementById('atotal').value||0);a.points=delta;a.notes=document.getElementById('anotes').value;s.points=total;log('UPDATE_TRAINING_RECORD',s.roblox+' · points '+total+' · session '+tr.title);save();attendanceModal(tid);toast('Attendance updated.')}
+function deleteTraining(id){let tr=db.trainings.find(x=>x.id===id);if(confirm('Delete training '+tr.title+'?')){db.trainings=db.trainings.filter(x=>x.id!==id);log('DELETE_TRAINING',tr.title);save();drawPage()}}
+function brigadesPage(){if(!has('brigades.manage'))return '<div class="empty">Nemate dozvolu za upravljanje brigadama.</div>';return head('Brigade',t('Dodavanje, uređivanje i uklanjanje brigada.','Додавање, уређивање и уклањање бригада.','Create, edit and remove military brigades.'),`<button class="btn primary" onclick="brigadeModal()">+ Add brigade</button>`)+`<div class="grid briga-grid">${db.brigades.map(b=>`<div class="card brigade-card"><div class="eyebrow">ROYAL SERBIAN ARMED FORCES</div><h3>${esc(b.name)}</h3><p>${esc(b.description)}</p><div class="count">${db.soldiers.filter(s=>s.brigade===b.name).length}</div><small class="muted">Assigned soldiers</small><div style="margin-top:14px"><button class="btn small" onclick="brigadeModal('${b.id}')">Edit</button> <button class="btn small danger" onclick="removeBrigade('${b.id}')">Remove</button></div></div>`).join('')||'<div class="empty">No brigades yet.</div>'}</div>`}
+function brigadeModal(id){let b=db.brigades.find(x=>x.id===id)||{name:'',description:''};openModal(id?'Edit brigade':'Add brigade',`<div class="formgrid"><div class="field full"><label>Brigade name</label><input id="bname" value="${esc(b.name)}"></div><div class="field full"><label>Description</label><textarea id="bdesc">${esc(b.description)}</textarea></div></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveBrigade('${id||''}')">Save</button>`)}
+function saveBrigade(id){let name=document.getElementById('bname').value.trim();if(!name)return toast('Enter a brigade name.');let b=db.brigades.find(x=>x.id===id);if(b){let old=b.name;b.name=name;b.description=document.getElementById('bdesc').value;db.soldiers.forEach(s=>{if(s.brigade===old)s.brigade=name})}else db.brigades.push({id:crypto.randomUUID(),name,description:document.getElementById('bdesc').value});log(id?'EDIT_BRIGADE':'ADD_BRIGADE',name);save();closeModal();drawPage()}
+function removeBrigade(id){let b=db.brigades.find(x=>x.id===id);if(confirm('Remove '+b.name+'? Soldiers assigned to it will become unassigned.')){db.soldiers.forEach(s=>{if(s.brigade===b.name)s.brigade=''});db.brigades=db.brigades.filter(x=>x.id!==id);log('REMOVE_BRIGADE',b.name);save();drawPage()}}
+function ranksPage(){if(!has('ranks.manage'))return '<div class="empty">Nemate dozvolu za upravljanje činovima.</div>';return head(t('Vojni činovi','Војни чинови','Military ranks'),t('Upravljaj listom činova koji se nude pri registraciji i izmeni vojnika.','Управљај листом чинова који се нуде при регистрацији и измени војника.','Manage the rank list used in soldier records.'),`<button class="btn primary" onclick="rankModal()">+ Add rank</button>`)+`<div class="card"><div class="rank-list">${db.ranks.map((r,i)=>`<div class="rank-row"><div><b>${i+1}. ${esc(r)}</b><br><small>${db.soldiers.filter(s=>s.rank===r).length} soldiers</small></div><button class="btn small danger" onclick="removeRank(${i})">Remove</button></div>`).join('')}</div></div>`}
+function rankModal(){openModal('Add military rank',`<div class="field"><label>Rank name</label><input id="rname" placeholder="Novi čin"></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveRank()">Add rank</button>`)}
+function saveRank(){let n=document.getElementById('rname').value.trim();if(!n)return toast('Enter rank name.');if(db.ranks.includes(n))return toast('Rank already exists.');db.ranks.push(n);log('ADD_RANK',n);save();closeModal();drawPage()}
+function removeRank(i){let r=db.ranks[i];if(db.soldiers.some(s=>s.rank===r))return toast('Cannot remove a rank assigned to soldiers. Reassign them first.');if(confirm('Remove rank '+r+'?')){db.ranks.splice(i,1);log('REMOVE_RANK',r);save();drawPage()}}
+function usersPage(){
+ if(!isAdmin())return '<div class="empty">Samo glavni administrator može da upravlja nalozima.</div>';
+ const rows=db.users.map(u=>{const soldier=u.soldierId?db.soldiers.find(s=>s.id===u.soldierId):null;const perms=(u.permissions||[]).length+' dozvola';return `<tr><td><b>${esc(u.username)}</b></td><td><span class="credential">••••••••</span><small class="muted" style="display:block">Lozinka je zaštićena</small></td><td>${esc(u.display||'—')}${soldier?`<small class="muted" style="display:block">Vojnik: ${esc(soldier.roblox)}</small>`:''}</td><td><span class="tag gold">${esc(u.role)}</span></td><td>${perms}</td><td><button class="btn small" onclick="userModal('${u.id}')">Izmeni</button> <button class="btn small" onclick="setAccountPassword('${u.id}')">Postavi / resetuj lozinku</button> ${u.id!=='u1'?`<button class="btn small danger" onclick="removeUser('${u.id}')">Ukloni</button>`:'<span class="tag green">Glavni admin</span>'}</td></tr>`}).join('');
+ return head('Nalozi i dozvole','Upravljanje korisnicima. Lozinke se nikada ne prikazuju.',`<button class="btn primary" onclick="userModal()">+ Dodaj nalog</button>`)+`<div class="tablewrap"><table><thead><tr><th>Korisničko ime</th><th>Lozinka</th><th>Ime / vojnik</th><th>Uloga</th><th>Dozvole</th><th>Akcije</th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="empty">Nema naloga.</td></tr>'}</tbody></table></div>`;
+}
+function setAccountPassword(id){if(!isAdmin())return;const u=db.users.find(x=>x.id===id);if(!u)return;openModal('Promena lozinke · '+esc(u.username),`<div class="field"><label>Nova lozinka (minimum 10 karaktera)</label><input id="newpass" type="password" minlength="10" autocomplete="new-password"></div>`,'',`<button class="btn" onclick="closeModal()">Otkaži</button><button class="btn primary" onclick="saveAccountPassword('${id}')">Sačuvaj</button>`)}
+async function saveAccountPassword(id){const password=document.getElementById('newpass').value;if(password.length<10)return toast('Lozinka mora imati najmanje 10 karaktera.');const r=await fetch('/api/admin/accounts/'+encodeURIComponent(id)+'/password',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({password})});const x=await r.json();if(!r.ok)return toast(x.error||'Greška.');closeModal();toast('Lozinka je promenjena.');}
+function userModal(id){
+ if(!has('users.manage'))return;
+ let u=db.users.find(x=>x.id===id)||{username:'',display:'',role:'Instructor',permissions:['soldiers.view','trainings.manage','deployments.manage']};
+ const protectedKing=!!id&&u.id==='u1';
+ openModal(id?'Izmeni nalog':'Dodaj nalog',`<div class="formgrid"><div class="field"><label>Korisničko ime</label><input id="uusername" value="${esc(u.username)}" ${id?'disabled':''}></div><div class="field"><label>Lozinka</label><small class="muted">Lozinka se postavlja odvojeno nakon kreiranja naloga i nikada se ne prikazuje.</small></div><div class="field"><label>Ime za prikaz</label><input id="udisplay" value="${esc(u.display)}"></div><div class="field"><label>Uloga</label><select id="urole" ${protectedKing?'disabled':''}><option ${u.role==='Instructor'?'selected':''}>Instructor</option><option ${u.role==='Senior Instructor'?'selected':''}>Senior Instructor</option><option ${u.role==='Command Staff'?'selected':''}>Command Staff</option><option ${u.role==='Royal Family'?'selected':''}>Royal Family</option><option ${u.role==='Soldier'?'selected':''}>Soldier</option></select></div><div class="field full"><label>Dozvole ${protectedKing?'(Kralj uvek ima sve dozvole)':''}</label>${PERMS.map(p=>`<label class="checkrow"><input type="checkbox" name="uperm" value="${p}" ${(u.role==='Royal Family'||(u.permissions||[]).includes('*')||(u.permissions||[]).includes(p))?'checked':''} ${protectedKing?'disabled':''}> ${p}</label>`).join('')}</div><div class="field full"><label>Ministarstva i funkcije</label>${MINISTRIES.map(m=>{const a=(u.ministries||[]).find(x=>x.ministryId===m.id)||{};const ps=a.permissions||[];return `<div class="card" style="margin:7px 0;padding:11px"><label class="checkrow"><input type="checkbox" name="uministry" value="${m.id}" ${a.ministryId?'checked':''}> <b>${esc(m.name)}</b></label><input name="mtitle_${m.id}" placeholder="Funkcija, npr. Ministar / Secretary" value="${esc(a.title||'')}" style="margin:7px 0"><div class="checkrow"><label><input type="checkbox" name="mperm_${m.id}" value="posts.manage" ${ps.includes('posts.manage')?'checked':''}> Objave</label>${m.id==='finance'?`<label><input type="checkbox" name="mperm_${m.id}" value="finance.view" ${ps.includes('finance.view')?'checked':''}> Pregled plata</label><label><input type="checkbox" name="mperm_${m.id}" value="finance.pay" ${ps.includes('finance.pay')?'checked':''}> Evidencija isplata</label>`:''}${m.id==='government'?`<label><input type="checkbox" name="mperm_${m.id}" value="government.announce" ${ps.includes('government.announce')?'checked':''}> Vladina saopštenja</label>`:''}</div></div>`}).join('')}</div></div>`, '',`<button class="btn" onclick="closeModal()">Otkaži</button><button class="btn primary" onclick="saveUser('${id||''}')">Sačuvaj nalog</button>`);
+}
+async function saveUser(id){
+ if(!isAdmin())return;
+ const old=db.users.find(x=>x.id===id),username=old?.username||document.getElementById('uusername').value.trim();
+ if(!username)return toast('Unesi korisničko ime.');
+ if(!old&&db.users.some(u=>u.username.toLowerCase()===username.toLowerCase()))return toast('Korisničko ime već postoji.');
+ const role=old?.id==='u1'?'Royal Family':document.getElementById('urole').value;
+ const permissions=role==='Royal Family'?[...PERMS]:[...document.querySelectorAll('input[name="uperm"]:checked')].map(x=>x.value);
+ const ministries=[...document.querySelectorAll('input[name="uministry"]:checked')].map(el=>{const id=el.value;return {ministryId:id,title:document.querySelector(`[name="mtitle_${id}"]`)?.value.trim()||'Staff',permissions:[...document.querySelectorAll(`input[name="mperm_${id}"]:checked`)].map(x=>x.value)}});
+ const payload={username,display:document.getElementById('udisplay').value.trim()||username,role,permissions,ministries};
+ try{const r=await fetch('/api/admin/accounts'+(id?'/'+encodeURIComponent(id):''),{method:id?'PATCH':'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(payload)});const result=await r.json();if(!r.ok)return toast(result.error||'Čuvanje naloga nije uspelo.');const state=await fetch('/api/state',{credentials:'same-origin'});db=await state.json();ensureExtendedData();closeModal();drawPage();toast(id?'Nalog je izmenjen.':'Nalog je kreiran.');}catch(e){console.error(e);toast('Greška pri čuvanju naloga.');}
+}
+async function removeUser(id){
+ if(!isAdmin())return;const u=db.users.find(x=>x.id===id);if(!u||u.id==='u1')return toast('Glavni admin nalog ne može biti uklonjen.');
+ if(!confirm('Ukloniti nalog '+u.username+'? Vojnički dosije ostaje sačuvan.'))return;
+ try{const r=await fetch('/api/admin/accounts/'+encodeURIComponent(id),{method:'DELETE',credentials:'same-origin'});const x=await r.json();if(!r.ok)return toast(x.error||'Uklanjanje nije uspelo.');db.users=db.users.filter(x=>x.id!==id);for(const soldier of db.soldiers)if(soldier.userId===id)soldier.userId=null;drawPage();toast('Nalog je uklonjen.');}catch(e){console.error(e);toast('Greška pri uklanjanju naloga.');}
+}
+function auditPage(){if(!isRoyal())return '<div class="empty">Audit log is restricted to Royal Family members.</div>';return head('Audit log',t('Evidencija aktivnosti i promena u sistemu. Dostupno samo Kraljevskoj porodici.','Евиденција активности и промена у систему. Доступно само Краљевској породици.','System activity and change history. Royal Family access only.'),`<button class="btn" onclick="exportAudit()">Export CSV</button>`)+`<div class="tablewrap"><table><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>${db.audit.map(a=>`<tr><td>${date(a.time)}</td><td>${esc(a.user)}</td><td><span class="tag">${esc(a.action)}</span></td><td>${esc(a.details)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No audit entries yet.</td></tr>'}</tbody></table></div>`}
+function exportAudit(){let rows=[['Timestamp','User','Action','Details'],...db.audit.map(a=>[a.time,a.user,a.action,a.details])];let csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='royal-audit-log.csv';a.click();URL.revokeObjectURL(a.href)}
+function openModal(title,body,left='',right=''){document.getElementById('modaltitle').textContent=title;document.getElementById('modalbody').innerHTML=body;document.getElementById('modalfoot').innerHTML=left+right;document.getElementById('modalback').classList.add('show')}
+function closeModal(){document.getElementById('modalback').classList.remove('show')}
+document.getElementById('modalback').addEventListener('click',e=>{if(e.target.id==='modalback')closeModal()});
+
+// --- Deployment, rally and promotion system ---
+const DEFAULT_PROMOTION_POINTS={'Vojnik':0,'Razvodnik':25,'Desetar':50,'Mlađi Vodnik':80,'Vodnik':115,'Stariji Vodnik':155,'Zastavnik':200,'Potporučnik':250,'Poručnik':310,'Kapetan':380,'Major':460,'Potpukovnik':550,'Pukovnik':650,'Brigadni General':760,'General-Major':880,'General Potpukovnik':1010,'Armijski General':1150};
+function ensureExtendedData(){
+ if(!Array.isArray(db.deployments))db.deployments=[];
+ if(!db.promotionPoints)db.promotionPoints={...DEFAULT_PROMOTION_POINTS};
+ else Object.entries(DEFAULT_PROMOTION_POINTS).forEach(([r,v])=>{if(db.promotionPoints[r]===undefined)db.promotionPoints[r]=v});
+ if(!Array.isArray(db.users))db.users=[];db.users.forEach(u=>{if(!Array.isArray(u.permissions))u.permissions=[];if(!Array.isArray(u.ministries))u.ministries=[]});
+ if(!Array.isArray(db.soldiers))db.soldiers=[];if(!Array.isArray(db.trainings))db.trainings=[];if(!Array.isArray(db.brigades))db.brigades=[];if(!Array.isArray(db.ranks))db.ranks=[];if(!Array.isArray(db.audit))db.audit=[];
+}
+function nextRankInfo(s){
+ const i=db.ranks.indexOf(s.rank);
+ if(i<0||i>=db.ranks.length-1)return null;
+ const next=db.ranks[i+1],required=Number(db.promotionPoints[next]??DEFAULT_PROMOTION_POINTS[next]??0);
+ return {next,required,eligible:(+s.points||0)>=required};
+}
+function promotionBadge(s){
+ const n=nextRankInfo(s);
+ if(!n||!n.eligible)return '';
+ if(s.promotionDecision&&s.promotionDecision.decision==='rejected'&&s.promotionDecision.pointsAtDecision===(+s.points||0))return '';
+ return `<button class="btn small primary promotion-alert" title="Promotion available" onclick="promotionModal('${s.id}')">! Promotion</button>`;
+}
+function soldiersPage(){
+ if(!has('soldiers.view'))return '<div class="empty">Nemate dozvolu za pregled vojnika.</div>';
+ let q=(window.sq||'').toLowerCase();
+ let arr=db.soldiers.filter(s=>(s.roblox+' '+s.discord+' '+s.rank+' '+s.brigade).toLowerCase().includes(q));
+ return head(t('Vojnici','Војници','Soldiers'),t('Evidencija, činovi, poeni i disciplinske beleške.','Евиденција, чинови, поени и дисциплинске белешке.','Personnel records, ranks, points and disciplinary notes.'),has('soldiers.manage')?`<button class="btn primary" onclick="soldierModal()">+ ${t('Dodaj vojnika','Додај војника','Add soldier')}</button>`:'')+
+ `<div class="toolbar"><div class="search"><input placeholder="${t('Pretraži Roblox, Discord ili čin...','Претражи Roblox, Discord или чин...','Search Roblox, Discord or rank...')}" value="${esc(window.sq||'')}" oninput="window.sq=this.value;drawPage()"></div><span class="tag">${arr.length} / ${db.soldiers.length}</span></div>
+ <div class="tablewrap"><table><thead><tr><th>Roblox / Discord</th><th>${t('Čin','Чин','Rank')}</th><th>${t('Brigada','Бригада','Brigade')}</th><th>${t('Poeni','Поени','Points')}</th><th>Promotion</th><th>${t('Strikes','Страјкови','Strikes')}</th><th>${t('Registrovan','Регистрован','Registered')}</th><th></th></tr></thead><tbody>
+ ${arr.map(s=>`<tr><td class="namecell"><b>${esc(s.roblox)}</b><small>${esc(s.discord)}</small></td><td><span class="tag gold">${esc(s.rank)}</span></td><td>${esc(s.brigade||'—')}</td><td><b>${s.points}</b></td><td>${promotionBadge(s)||'<span class="muted">—</span>'}</td><td>${s.strikes?`<span class="tag red">${s.strikes}</span>`:'—'}</td><td>${new Date(s.registered).toLocaleDateString()}</td><td>${has('soldiers.manage')?`<button class="btn small" onclick="soldierModal('${s.id}')">Manage</button>`:`<button class="btn small" onclick="viewSoldier('${s.id}')">View</button>`}</td></tr>`).join('')||`<tr><td colspan="8" class="empty">Nema rezultata.</td></tr>`}
+ </tbody></table></div><p class="hint">The exclamation mark appears when a soldier reaches the point requirement for the next rank.</p>`;
+}
+function promotionModal(id){
+ if(!has('soldiers.manage'))return;
+ const s=db.soldiers.find(x=>x.id===id),n=s&&nextRankInfo(s);if(!s||!n||!n.eligible)return toast('Promotion requirements are not met.');
+ openModal('Promotion review',`<div class="card"><div class="eyebrow">PROMOTION ELIGIBILITY</div><h3>${esc(s.roblox)}</h3><p class="muted">${esc(s.rank)} → <b>${esc(n.next)}</b></p><div class="grid stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div><span class="muted">Current points</span><h2>${s.points}</h2></div><div><span class="muted">Required points</span><h2>${n.required}</h2></div></div></div><div class="field" style="margin-top:14px"><label>Decision reason *</label><textarea id="promotionreason" placeholder="Write the reason for approving or rejecting this promotion..."></textarea></div>`,
+ `<button class="btn danger" onclick="decidePromotion('${id}','rejected')">Reject promotion</button>`,
+ `<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="decidePromotion('${id}','approved')">Approve promotion</button>`);
+}
+function decidePromotion(id,decision){
+ const s=db.soldiers.find(x=>x.id===id),n=s&&nextRankInfo(s),reason=document.getElementById('promotionreason').value.trim();
+ if(!reason)return toast('A reason is required for this decision.');
+ if(!s||!n||!n.eligible)return toast('Promotion is no longer eligible.');
+ if(decision==='approved'){const old=s.rank;s.rank=n.next;s.promotionDecision={decision,from:old,to:n.next,reason,by:me.username,at:new Date().toISOString()};log('PROMOTION_APPROVED',`${s.roblox}: ${old} → ${n.next}. Reason: ${reason}`);toast('Promotion approved.')}
+ else{s.promotionDecision={decision,pointsAtDecision:+s.points||0,from:s.rank,to:n.next,reason,by:me.username,at:new Date().toISOString()};log('PROMOTION_REJECTED',`${s.roblox}: ${n.next}. Reason: ${reason}`);toast('Promotion rejected.')}
+ save();closeModal();drawPage();
+}
+function ranksPage(){
+ if(!has('ranks.manage'))return '<div class="empty">Nemate dozvolu za upravljanje činovima.</div>';
+ return head(t('Vojni činovi','Војни чинови','Military ranks'),t('Upravljaj činovima i minimalnim brojem poena za unapređenje.','Управљај чиновима и минималним бројем поена за унапређење.','Manage ranks and the minimum points required for promotion.'),`<button class="btn primary" onclick="rankModal()">+ Add rank</button>`)
+ +`<div class="card"><h3>Promotion System · Required points</h3><p class="muted">Set the total points a soldier must have to be eligible for each rank. Requirements are cumulative.</p><div class="tablewrap"><table><thead><tr><th>Rank</th><th>Required points</th><th></th></tr></thead><tbody>${db.ranks.map((r,i)=>`<tr><td><b>${esc(r)}</b></td><td><b>${Number(db.promotionPoints[r]??0)}</b></td><td><button class="btn small" onclick="editPromotionPoints('${esc(r).replace(/'/g,"\\'")}')">Edit points</button></td></tr>`).join('')}</tbody></table></div></div>
+ <div class="card" style="margin-top:14px"><h3>Rank list</h3><div class="rank-list">${db.ranks.map((r,i)=>`<div class="rank-row"><div><b>${i+1}. ${esc(r)}</b><br><small>${db.soldiers.filter(s=>s.rank===r).length} soldiers</small></div><button class="btn small danger" onclick="removeRank(${i})">Remove</button></div>`).join('')}</div></div>`;
+}
+function editPromotionPoints(rank){
+ const current=Number(db.promotionPoints[rank]??0);
+ openModal('Edit promotion requirement',`<p><b>${esc(rank)}</b></p><div class="field"><label>Required total points</label><input id="promotionpoints" type="number" min="0" value="${current}"></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="savePromotionPoints('${esc(rank).replace(/'/g,"\\'")}')">Save requirement</button>`);
+}
+function savePromotionPoints(rank){
+ const val=Number(document.getElementById('promotionpoints').value);
+ if(!Number.isFinite(val)||val<0)return toast('Enter a valid non-negative points value.');
+ db.promotionPoints[rank]=Math.floor(val);log('UPDATE_PROMOTION_REQUIREMENT',`${rank}: ${val} points`);save();closeModal();drawPage();toast('Promotion requirement updated.');
+}
+function deploymentsPage(){
+ if(!has('deployments.manage'))return '<div class="empty">You do not have permission to manage deployments and rallies.</div>';
+ return head('Deployments & Rallies','Record deployments, rallies, attendance and awarded points.',`<button class="btn primary" onclick="deploymentModal()">+ Create record</button>`)
+ +`<div class="toolbar"><span class="tag">${db.deployments.length} records</span></div><div class="tablewrap"><table><thead><tr><th>Event</th><th>Type</th><th>Date & time</th><th>Instructor</th><th>Participants</th><th></th></tr></thead><tbody>${db.deployments.map(e=>`<tr><td><b>${esc(e.title)}</b>${e.category?`<small>${esc(e.category)}</small>`:''}</td><td><span class="tag ${e.kind==='Rally'?'gold':''}">${esc(e.kind)}</span></td><td>${date(e.date)}</td><td>${esc(e.instructor)}</td><td>${e.attendees.length}</td><td><button class="btn small" onclick="deploymentAttendance('${e.id}')">Manage attendance</button> <button class="btn small danger" onclick="deleteDeployment('${e.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No deployment or rally records yet.</td></tr>'}</tbody></table></div>`;
+}
+function deploymentModal(){
+ if(!has('deployments.manage'))return;
+ const local=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
+ openModal('Create deployment / rally',`<div class="formgrid"><div class="field full"><label>Event title *</label><input id="evtitle" placeholder="e.g. Weekend community deployment"></div><div class="field"><label>Record type</label><select id="evkind" onchange="toggleRallyCategory()"><option>Deployment</option><option>Rally</option></select></div><div class="field" id="rallycatwrap" style="display:none"><label>Rally category</label><select id="evcategory"><option>Economic action</option><option>Military action</option></select></div><div class="field full"><label>Date & time</label><input id="evdate" type="datetime-local" value="${local}"></div><div class="field full"><label>Notes</label><textarea id="evnotes" placeholder="Event details..."></textarea></div></div><p class="hint">After creating the record, use Manage attendance to search for soldiers by Roblox or Discord username and record their points.</p>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveDeployment()">Create record</button>`);
+}
+function toggleRallyCategory(){const kind=document.getElementById('evkind').value;document.getElementById('rallycatwrap').style.display=kind==='Rally'?'':'none';}
+function saveDeployment(){
+ const title=document.getElementById('evtitle').value.trim(),kind=document.getElementById('evkind').value,raw=document.getElementById('evdate').value;
+ if(!title)return toast('Enter an event title.');
+ if(!raw)return toast('Select the event date and time.');
+ const ev={id:crypto.randomUUID(),title,kind,category:kind==='Rally'?document.getElementById('evcategory').value:'',date:new Date(raw).toISOString(),notes:document.getElementById('evnotes').value,instructor:me.username,attendees:[]};
+ db.deployments.unshift(ev);log('CREATE_'+kind.toUpperCase(),`${title}${ev.category?' · '+ev.category:''} · ${date(ev.date)}`);save();closeModal();drawPage();toast('Event record created.');
+}
+function deploymentAttendance(id){
+ const ev=db.deployments.find(x=>x.id===id);if(!ev)return;
+ openModal('Event attendance',`<p class="muted"><b>${esc(ev.title)}</b> · ${esc(ev.kind)}${ev.category?' / '+esc(ev.category):''} · ${date(ev.date)}</p><div class="search" style="margin-bottom:12px"><input id="evsearch" placeholder="Search Roblox or Discord username..." oninput="searchEventSoldiers('${id}')"></div><div id="evresults"></div><h3>Participants</h3><div id="evattlist">${eventAttendanceList(ev)}</div>`,'',`<button class="btn" onclick="closeModal()">Done</button>`);
+ searchEventSoldiers(id);
+}
+function eventAttendanceList(ev){
+ return ev.attendees.map(a=>{const s=db.soldiers.find(x=>x.id===a.soldierId);return s?`<div class="activity-item"><div class="dot"></div><div style="flex:1"><b>${esc(s.roblox)}</b><small>${esc(s.discord)} · ${a.points>=0?'+':''}${a.points} points · ${esc(a.notes||'No notes')}</small><button class="btn small" onclick="editEventAttendance('${ev.id}','${s.id}')">Edit points / notes</button></div><button class="btn small danger" onclick="removeEventAttendee('${ev.id}','${s.id}')">Remove</button></div>`:''}).join('')||'<p class="muted">No participants yet.</p>';
+}
+function searchEventSoldiers(id){
+ const ev=db.deployments.find(x=>x.id===id),q=(document.getElementById('evsearch')?.value||'').toLowerCase();if(!ev)return;
+ const matches=db.soldiers.filter(s=>(s.roblox+' '+s.discord).toLowerCase().includes(q)&&!ev.attendees.some(a=>a.soldierId===s.id));
+ document.getElementById('evresults').innerHTML=matches.slice(0,10).map(s=>`<div class="activity-item"><div style="flex:1"><b>${esc(s.roblox)}</b><small>${esc(s.discord)} · ${esc(s.rank)}</small></div><button class="btn small primary" onclick="addEventAttendee('${id}','${s.id}')">Add</button></div>`).join('')||'<p class="muted">No matching available soldiers.</p>';
+}
+function addEventAttendee(eid,sid){
+ const ev=db.deployments.find(x=>x.id===eid);if(!ev||ev.attendees.some(a=>a.soldierId===sid))return;
+ ev.attendees.push({soldierId:sid,points:0,notes:''});log('EVENT_ATTENDANCE',`${db.soldiers.find(s=>s.id===sid)?.roblox} attended ${ev.title}`);save();deploymentAttendance(eid);
+}
+function editEventAttendance(eid,sid){
+ const ev=db.deployments.find(x=>x.id===eid),a=ev?.attendees.find(x=>x.soldierId===sid),s=db.soldiers.find(x=>x.id===sid);if(!a||!s)return;
+ openModal('Participant record',`<p><b>${esc(s.roblox)}</b> · Current total: ${s.points} points</p><div class="formgrid"><div class="field"><label>Points to add / deduct</label><input id="epdelta" type="number" value="${a.points}"><span class="hint">Use a negative value to deduct points.</span></div><div class="field"><label>New soldier total</label><input id="eptotal" type="number" min="0" value="${s.points}"></div><div class="field full"><label>Participant notes</label><textarea id="epnotes">${esc(a.notes)}</textarea></div></div>` ,`<button class="btn" onclick="deploymentAttendance('${eid}')">Back</button>`,`<button class="btn primary" onclick="saveEventAttendance('${eid}','${sid}')">Save changes</button>`);
+}
+function saveEventAttendance(eid,sid){
+ const ev=db.deployments.find(x=>x.id===eid),a=ev?.attendees.find(x=>x.soldierId===sid),s=db.soldiers.find(x=>x.id===sid);if(!a||!s)return;
+ const total=Number(document.getElementById('eptotal').value),delta=Number(document.getElementById('epdelta').value)||0;
+ if(!Number.isFinite(total)||total<0)return toast('Enter a valid total points value.');
+ a.points=delta;a.notes=document.getElementById('epnotes').value;s.points=Math.floor(total);
+ log('UPDATE_EVENT_PARTICIPANT',`${s.roblox} · ${ev.title} · ${delta>=0?'+':''}${delta} · total ${s.points}`);
+ save();deploymentAttendance(eid);toast('Participant record updated.');
+}
+function removeEventAttendee(eid,sid){
+ const ev=db.deployments.find(x=>x.id===eid);if(!ev)return;
+ ev.attendees=ev.attendees.filter(a=>a.soldierId!==sid);log('REMOVE_EVENT_PARTICIPANT',`${sid} removed from ${ev.title}`);save();deploymentAttendance(eid);
+}
+function deleteDeployment(id){
+ const ev=db.deployments.find(x=>x.id===id);if(!ev)return;
+ if(!confirm('Delete this event record?'))return;
+ db.deployments=db.deployments.filter(x=>x.id!==id);log('DELETE_EVENT',ev.title);save();drawPage();
+}
+
+// --- Balkan Borders RP: universal government portal ---
+const MINISTRIES=[
+ {id:'defence',name:'Ministry of Defence',local:'Ministarstvo odbrane',icon:'⚔'},
+ {id:'foreign',name:'Ministry of Foreign Affairs',local:'Ministarstvo spoljnih poslova',icon:'🌐'},
+ {id:'economy',name:'Ministry of Economy',local:'Ministarstvo privrede',icon:'▥'},
+ {id:'finance',name:'Ministry of Finance',local:'Ministarstvo finansija',icon:'₿'},
+ {id:'propaganda',name:'Ministry of Propaganda',local:'Ministarstvo propagande',icon:'▣'},
+ {id:'government',name:'Government of Serbia',local:'Vlada Srbije',icon:'🏛'}
+];
+let activeMinistry='defence';
+function ensurePortalData(){if(!Array.isArray(db.ministryPosts))db.ministryPosts=[];if(!Array.isArray(db.salaries))db.salaries=[];if(!Array.isArray(db.ministries))db.ministries=MINISTRIES.map(x=>({...x,ministerId:null}));}
+function portalHome(){ensurePortalData();const cards=MINISTRIES.map(m=>`<div class="card"><div class="symbol">${m.icon}</div><h3>${esc(m.name)}</h3><p class="muted">${esc(m.local)}</p><button class="btn primary" onclick="openMinistry('${m.id}')">Enter portal</button></div>`).join('');return head('Balkan Borders RP · Republic of Serbia','Government and ministry services portal')+`<div class="grid briga-grid">${cards}</div><div class="card" style="margin-top:16px"><h3>Latest public announcements</h3>${db.ministryPosts.filter(p=>p.visibility==='public').slice().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,8).map(p=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(p.title)}</b><small>${esc(MINISTRIES.find(m=>m.id===p.ministryId)?.name||'Government')} · ${date(p.createdAt)}</small><p>${esc(p.body||'')}</p>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">Open link</a>`:''}</div></div>`).join('')||'<p class="muted">No public announcements yet.</p>'}</div><div class="card" style="margin-top:14px"><h3>Citizen services</h3><span class="tag gold">COMING SOON</span><p class="muted">Citizen accounts and registration will be available in a future update.</p></div>`;}
+function ministryPerm(m,p){return isAdmin()||(me?.ministries||[]).some(x=>x.ministryId===m&&(x.permissions||[]).includes(p));}
+function openMinistry(id){activeMinistry=id;page='ministry';renderMinistry();}
+function renderMinistry(){const m=MINISTRIES.find(x=>x.id===activeMinistry);if(!m)return;const isGov=activeMinistry==='government';const canPost=ministryPerm(activeMinistry,'posts.manage')||(isGov&&ministryPerm(activeMinistry,'government.announce'));const posts=db.ministryPosts.filter(p=>p.ministryId===activeMinistry|| (isGov&&p.ministryId==='government')).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));let extra='';if(activeMinistry==='finance')extra=financePanel();if(activeMinistry==='propaganda')extra=propagandaPanel();if(isGov)extra+=governmentPanel();document.getElementById('view').innerHTML=head(m.name,m.local+ ' · Balkan Borders RP',`<button class="btn" onclick="go('portal')">← All ministries</button> ${canPost?'<button class="btn primary" onclick="newMinistryPost()">+ New announcement</button>':''}`)+extra+`<div class="card" style="margin-top:14px"><h3>Announcements</h3>${posts.map(p=>`<div class="activity-item"><div class="dot"></div><div style="flex:1"><b>${esc(p.title)}</b><small>${date(p.createdAt)} · ${p.visibility==='internal'?'Internal':'Public'}</small><p>${esc(p.body||'')}</p>${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">Open media</a>`:''}</div></div>`).join('')||'<p class="muted">No announcements.</p>'}</div>`;}
+function newMinistryPost(){if(!ministryPerm(activeMinistry,'posts.manage')&&!(activeMinistry==='government'&&ministryPerm(activeMinistry,'government.announce')))return toast('You do not have permission.');openModal('New ministry post',`<div class="formgrid"><div class="field full"><label>Title</label><input id="posttitle" maxlength="120"></div><div class="field full"><label>Message / description</label><textarea id="postbody"></textarea></div><div class="field full"><label>Link (optional, e.g. TikTok)</label><input id="posturl" type="url" placeholder="https://..."></div><div class="field"><label>Visibility</label><select id="postvisibility"><option value="public">Public</option><option value="internal">Internal government</option></select></div></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveMinistryPost()">Publish</button>`);}
+async function saveMinistryPost(){const title=document.getElementById('posttitle').value.trim(),body=document.getElementById('postbody').value.trim(),url=document.getElementById('posturl').value.trim(),visibility=document.getElementById('postvisibility').value;if(!title)return toast('Enter a title.');const r=await fetch('/api/ministry/posts',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({ministryId:activeMinistry,title,body,url,visibility})});const x=await r.json();if(!r.ok)return toast(x.error||'Publish failed.');db.ministryPosts.unshift(x.post);closeModal();renderMinistry();toast('Published.');}
+function financePanel(){if(!ministryPerm('finance','finance.view')&&!isAdmin())return '';const rows=db.soldiers.map(s=>{const payments=db.salaries.filter(x=>x.soldierId===s.id).sort((a,b)=>new Date(b.paidAt)-new Date(a.paidAt));const last=payments[0];return `<tr><td>${esc(s.roblox)}</td><td>${esc(s.rank)}</td><td>${Number(s.points)||0}</td><td>${last?esc(last.amount)+' · '+date(last.paidAt):'Not paid'}</td><td>${ministryPerm('finance','finance.pay')||isAdmin()?`<button class="btn small" onclick="salaryModal('${s.id}')">Record payment</button>`:''}</td></tr>`}).join('');return `<div class="card"><h3>Personnel payroll</h3><p class="muted">Existing soldier records are read from the current database. Payment history is additive.</p><div class="tablewrap"><table><thead><tr><th>Soldier</th><th>Rank</th><th>Points</th><th>Last payment</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;}
+function salaryModal(id){if(!ministryPerm('finance','finance.pay')&&!isAdmin())return;openModal('Record salary payment',`<div class="formgrid"><div class="field"><label>Amount</label><input id="salaryamount" type="number" min="0" step="0.01"></div><div class="field"><label>Paid date</label><input id="salarydate" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>`,'',`<button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveSalary('${id}')">Save payment</button>`);}
+async function saveSalary(soldierId){const amount=Number(document.getElementById('salaryamount').value),paidAt=document.getElementById('salarydate').value;if(!(amount>0)||!paidAt)return toast('Enter amount and date.');const r=await fetch('/api/ministry/salaries',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({soldierId,amount,paidAt})});const x=await r.json();if(!r.ok)return toast(x.error||'Could not save payment.');db.salaries.push(x.payment);closeModal();renderMinistry();}
+function propagandaPanel(){return `<div class="card"><h3>Media / TikTok submissions</h3><p class="muted">Publish a new TikTok or media link using the announcement button.</p></div>`;}
+function governmentPanel(){const internal=db.ministryPosts.filter(p=>p.ministryId==='government'&&p.visibility==='internal');return `<div class="card"><h3>Internal government announcements</h3>${internal.map(p=>`<div class="activity-item"><div class="dot"></div><div><b>${esc(p.title)}</b><small>${date(p.createdAt)}</small><p>${esc(p.body||'')}</p></div></div>`).join('')||'<p class="muted">No internal announcements.</p>'}</div>`;}
+
+loginScreen();
+</script>
+</body>
+</html>
