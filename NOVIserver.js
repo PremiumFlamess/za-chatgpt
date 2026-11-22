@@ -54,6 +54,7 @@ function publicUser(user) {
     username: user.username,
     display: user.display || user.username,
     role: user.role || 'Staff',
+    roleIds: Array.isArray(user.roleIds) ? user.roleIds : [],
     permissions: Array.isArray(user.permissions) ? user.permissions : [],
     soldierId: user.soldierId || null,
     isMainAdmin: user.id === MAIN_ADMIN_USER_ID
@@ -95,12 +96,19 @@ async function auth(req, res, next) {
   }
 }
 function hasGlobalPermission(req, permission) {
-  return req.isMainAdmin || req.user.permissions.includes('*') || req.user.permissions.includes(permission);
+  if (permission === 'users.manage') return req.isMainAdmin;
+  if (req.isMainAdmin || req.user.permissions.includes('*') || req.user.permissions.includes(permission)) return true;
+  const roles = (req.state.roles || []).filter(r => (req.user.roleIds || []).includes(r.id) && (r.ministries || []).includes('defence'));
+  return roles.some(r => (r.permissions || []).includes('*') || (r.permissions || []).includes(permission));
 }
 function ministryPermission(state, userId, ministry, permission, isAdmin) {
   if (isAdmin) return true;
+  if (permission === 'users.manage') return false;
   const membership = (state.ministryMembers || []).find(x => x.userId === userId && x.ministry === ministry);
-  return !!membership && (membership.permissions || []).some(p => p === '*' || p === permission);
+  const direct = !!membership && (membership.permissions || []).some(p => p === '*' || p === permission);
+  const user = (state.users || []).find(u => u.id === userId);
+  const roles = (state.roles || []).filter(r => (user?.roleIds || []).includes(r.id) && (r.ministries || []).includes(ministry));
+  return direct || roles.some(r => (r.permissions || []).includes('*') || (r.permissions || []).includes(permission));
 }
 function jsonEqual(a, b) { return JSON.stringify(a ?? null) === JSON.stringify(b ?? null); }
 function changedKeys(oldState, newState) {
@@ -208,6 +216,19 @@ app.put('/api/state', auth, async (req, res) => {
     const nextState = req.body;
     if (!nextState || !Array.isArray(nextState.users) || !Array.isArray(nextState.soldiers)) return res.status(400).json({ error: 'Invalid data format.' });
     if (JSON.stringify(nextState).length > 2_000_000) return res.status(413).json({ error: 'State payload is too large.' });
+    const previousMain = req.state.users.find(u => u.id === MAIN_ADMIN_USER_ID);
+    const incomingMain = nextState.users.find(u => u.id === MAIN_ADMIN_USER_ID);
+    if (previousMain && (!incomingMain || JSON.stringify(previousMain) !== JSON.stringify(incomingMain))) {
+      return res.status(403).json({ error: 'The main administrator account is protected and cannot be modified.' });
+    }
+    if ((nextState.roles || []).some(role => (role.permissions || []).includes('users.manage'))) {
+      return res.status(400).json({ error: 'Account management cannot be granted through roles.' });
+    }
+    const validMinistries = new Set(['defence','foreign','economy','finance','propaganda','government']);
+    const validPermissions = new Set(['*','announcements.manage','finance.manage','propaganda.manage','government.internal','soldiers.view','soldiers.manage','trainings.manage','deployments.manage','brigades.manage','ranks.manage','audit.view']);
+    if ((nextState.roles || []).some(role => !role.id || !String(role.name || '').trim() || !Array.isArray(role.ministries) || !role.ministries.length || role.ministries.some(m => !validMinistries.has(m)) || !Array.isArray(role.permissions) || !role.permissions.length || role.permissions.some(p => !validPermissions.has(p)))) {
+      return res.status(400).json({ error: 'Role definition is invalid.' });
+    }
     if (!req.isMainAdmin) {
       const denied = validateNonAdminChanges(req, nextState);
       if (denied) return res.status(403).json({ error: denied });
